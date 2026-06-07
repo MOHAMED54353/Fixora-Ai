@@ -1,0 +1,205 @@
+.profile {
+  background-color: #ffffff;
+  border-bottom: 1px solid #a9a9a952;
+}
+.container-profile {
+  max-width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  direction: rtl;
+}
+
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 40px;
+  align-items: center;
+  height: 88px;
+  border-bottom: 1px solid #a9a9a952;
+}
+
+.logo2 {
+  font-size: 30px;
+  font-weight: bold;
+  color: #2a5caf;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logo2:hover {
+  transform: scale(1.05);
+  color: #1e4a8f;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  height: 70px;
+}
+
+.nav-item {
+  color: #a9a9a9;
+  cursor: pointer;
+  padding: 0 20px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.nav-item:hover {
+  color: #2563eb;
+}
+
+.nav-item.active {
+  color: #1e40af;
+  font-weight: 600;
+}
+
+.nav-item.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: #2563eb;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.notification {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #374151;
+  font-size: 15px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.notification:hover {
+  color: #2563eb;
+}
+
+.user-welcome {
+  display: flex;
+  align-items: center;
+  color: #333d4d;
+  gap: 10px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+.user-welcome:hover {
+  background-color: #f3f4f6;
+}
+
+.welcome-text {
+  font-size: 16px;
+  color: #333d4d;
+}
+
+@media (max-width: 768px) {
+  .container-profile {
+    padding: 0 20px;
+  }
+
+  .top-row {
+    height: auto;
+    min-height: 60px;
+    padding: 10px 0;
+  }
+
+  .nav-menu {
+    justify-content: space-around;
+    height: 45px;
+  }
+
+  .nav-item {
+    padding: 0 10px;
+    font-size: 14px;
+  }
+
+  .dimension-badge {
+    display: none;
+  }
+
+  .welcome-text {
+    display: none;
+  }
+}
+
+/* sec 1 */
+
+.banner-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  margin-top: 25px;
+}
+
+.booking-banner {
+  width: 1240px;
+  max-width: 100%;
+  background: linear-gradient(135deg, #2a5caf 0%, #122649 100%);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(18, 38, 73, 0.15);
+}
+
+.banner-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  direction: rtl;
+}
+
+.text-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.main-title {
+  font-size: 28px;
+  font-weight: 400;
+  color: #ffffff;
+}
+
+.sub-title {
+  font-size: 15px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.booking-button {
+  background-color: #ffffff;
+  color: #2a5caf;
+  border: none;
+  border-radius: 12px;
+  padding: 15px 25px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.booking-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background-color: #f8f9fa;
+}
+
+/* sec 2 */

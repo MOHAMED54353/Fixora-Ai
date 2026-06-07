@@ -1,0 +1,314 @@
+ .service-card {
+          transition: all 0.3s ease;
+        }
+        .service-card:hover {
+          transform: translateY(-10px);
+          box-shadow: 0 10px 30px rgba(46, 92, 184, 0.3) !important;
+        }
+        .service-card:hover .service-icon {
+          transform: scale(1.2);
+        }
+        .service-icon {
+          transition: transform 0.3s ease;
+        }
+
+        .section3-container {
+          margin-bottom: 150px;
+          direction: rtl;
+          text-align: right;
+          margin-right: 60px;
+          margin-left: 50px;
+        }
+
+        .section3-header {
+          justify-content: space-between;
+          display: flex;
+          margin-bottom: 24px;
+          align-items: center;
+        }
+
+        .section3-title {
+          color: #333D4D;
+          font-size: 36px;
+          font-weight: bold;
+        }
+
+        .view-all-link {
+          font-size: 16px;
+          color: #2A5CAF;
+          cursor: pointer;
+        }
+
+        .service-card-wrapper {
+          width: 280px;
+          height: 265px;
+          border-radius: 16px;
+          border: none;
+        }
+
+        .cta-banner {
+          margin-top: 100px;
+          margin-left: 25px;
+        }
+
+        .cta-banner-inner {
+          background: linear-gradient(135deg, #3062c6ff 0%, #35578dff 100%);
+          border-radius: 16px;
+          padding: 3rem;
+          color: white;
+          height: 300px;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .cta-image {
+          max-width: 300px;
+          height: auto;
+          margin-top: -110px;
+          position: absolute;
+          left: 50px;
+        }
+
+        .why-section {
+          margin-top: 100px;
+          margin-left: 100px;
+        }
+
+        .why-card {
+          width: 350px;
+          height: 265px;
+          border-radius: 16px;
+          border: none;
+          padding: 24px;
+        }
+
+        @media (max-width: 1024px) {
+          .section3-container {
+            margin-right: 30px;
+            margin-left: 30px;
+            margin-bottom: 100px;
+          }
+
+          .section3-title {
+            font-size: 30px;
+          }
+
+          .service-card-wrapper {
+            width: 240px;
+            height: 240px;
+          }
+
+          .why-section {
+            margin-left: 50px;
+          }
+
+          .why-card {
+            width: 300px;
+            height: 240px;
+                      margin-bottom: 30px;
+
+          }
+
+          .cta-banner {
+            margin-left: 0;
+          }
+
+          .cta-image {
+            max-width: 250px;
+            left: 30px;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .section3-container {
+            margin: 0 15px 80px 15px;
+          }
+
+          .section3-header {
+            flex-direction: column;
+            align-items: start;
+            gap: 10px;
+          }
+
+          .section3-title {
+            font-size: 26px;
+          }
+
+          .view-all-link {
+            font-size: 14px;
+          }
+
+          .service-card-wrapper {
+            width: 100%;
+            max-width: 300px;
+            height: 220px;
+            margin: 0 auto;
+          }
+
+          .row.g-4 {
+            justify-content: center !important;
+          }
+
+          .cta-banner {
+            margin-top: 60px;
+            margin-left: 0;
+          }
+
+          .cta-banner-inner {
+            padding: 2rem;
+            height: auto;
+            min-height: 280px;
+          }
+
+          .cta-banner-inner h2 {
+            font-size: 22px !important;
+          }
+
+          .cta-banner-inner p {
+            font-size: 16px !important;
+          }
+
+          .cta-image {
+            position: relative;
+            left: 0;
+            margin: 20px auto 0;
+            display: block;
+            max-width: 200px;
+          }
+
+          .why-section {
+            margin-top: 60px;
+            margin-left: 0;
+            
+          }
+
+          .why-section h3 {
+            font-size: 26px !important;
+          }
+
+          .why-section > p {
+            font-size: 16px !important;
+          }
+
+          .why-card {
+            width: 100%;
+            max-width: 350px;
+            height: auto;
+            min-height: 220px;
+            margin: 0 auto;
+            margin-bottom: 30px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .section3-container {
+            margin: 0 10px 60px 10px;
+          }
+
+          .section3-title {
+            font-size: 22px;
+          }
+
+          .view-all-link {
+            font-size: 13px;
+          }
+
+          .service-card-wrapper {
+            max-width: 100%;
+            height: 200px;
+          }
+
+          .service-icon {
+            font-size: 2.5rem !important;
+          }
+
+          .service-card-wrapper h5 {
+            font-size: 16px !important;
+          }
+
+          .service-card-wrapper p {
+            font-size: 14px !important;
+          }
+
+          .cta-banner {
+            margin-top: 50px;
+          }
+
+          .cta-banner-inner {
+            padding: 1.5rem;
+            min-height: 250px;
+          }
+
+          .cta-banner-inner h2 {
+            font-size: 20px !important;
+          }
+
+          .cta-banner-inner p {
+            font-size: 14px !important;
+          }
+
+          .cta-banner-inner button {
+            font-size: 14px !important;
+            padding: 8px 16px !important;
+          }
+
+          .cta-image {
+            max-width: 180px;
+            margin-top: 15px;
+          }
+
+          .why-section {
+            margin-top: 50px;
+          }
+
+          .why-section h3 {
+            font-size: 22px !important;
+          }
+
+          .why-section > p {
+            font-size: 14px !important;
+          }
+
+          .why-card {
+            height: auto;
+            min-height: 200px;
+          }
+
+          .why-card h5 {
+            font-size: 16px !important;
+          }
+
+          .why-card p {
+            font-size: 14px !important;
+          }
+        }
+
+        @media (max-width: 360px) {
+          .section3-title {
+            font-size: 20px;
+          }
+
+          .service-card-wrapper {
+            height: 190px;
+          }
+
+          .service-icon {
+            font-size: 2rem !important;
+          }
+
+          .cta-banner-inner h2 {
+            font-size: 18px !important;
+          }
+
+          .cta-banner-inner p {
+            font-size: 13px !important;
+          }
+
+          .why-section h3 {
+            font-size: 20px !important;
+          }
+
+          .why-section > p {
+            font-size: 13px !important;
+          }
+        }

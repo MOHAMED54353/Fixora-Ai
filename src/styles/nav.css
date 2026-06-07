@@ -1,0 +1,447 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background: white;
+  z-index: 1000;
+  padding: 0 70px;
+  /* background: rgba(255, 255, 255, 0.100);
+  -webkit-backdrop-filter: blur(10px); 
+  backdrop-filter: blur(10px); */
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  height: 80px;
+  direction: rtl;
+}
+
+.logo {
+  font-size: 30px;
+  font-weight: bold;
+  color: #2a5caf;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-right: -80px;
+}
+
+.logo:hover {
+  transform: scale(1.08);
+  color: #1e4a8f;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  list-style: none;
+  margin: auto;
+}
+
+.nav-link {
+  color: #333;
+  text-decoration: none;
+  font-size: 19px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #2a5caf;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #2a5caf;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+
+.auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-left: -70px;
+}
+/* ── Add these styles to your nav.css ── */
+
+/* Wrapper */
+.user-dropdown-wrapper {
+  position: relative;
+}
+
+/* Trigger button */
+.user-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50px;
+  padding: 6px 14px 6px 10px;
+  cursor: pointer;
+  color: inherit;
+  font-size: 14px;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.user-dropdown-trigger:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Avatar circle */
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--primary, #1d6fa4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.user-name {
+  white-space: nowrap;
+}
+
+/* Dropdown panel */
+.user-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  min-width: 180px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  z-index: 999;
+  animation: dropDown 0.18s ease;
+}
+
+@keyframes dropDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Items */
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #333;
+  transition: background 0.15s;
+}
+
+.dropdown-item:hover {
+  background: #f4f7ff;
+}
+
+.dropdown-item--danger {
+  color: #e53935;
+}
+
+.dropdown-item--danger:hover {
+  background: #fff0f0;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: #f0f0f0;
+  margin: 0;
+}
+
+.btn {
+  border-radius: 12px;
+  gap: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: #2a5caf;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #023174ff;
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  background: transparent;
+  color: #2563eb;
+  border: 1.5px solid #2a5caf;
+}
+
+.btn-outline:hover {
+  background: #2a5caf;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* ── أضف الـ CSS ده في nav.css ── */
+
+/* بادج على الـ trigger button */
+.nav-bell-badge {
+  background: red;
+  color: #fff;
+  border-radius: 50px;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 1px 6px;
+  min-width: 18px;
+  text-align: center;
+  line-height: 16px;
+  margin-right: 2px;
+}
+
+/* بادج صغير على أيقونة الجرس داخل الـ dropdown */
+.dropdown-bell-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: red;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 9px;
+  padding: 1px 4px;
+  min-width: 16px;
+  text-align: center;
+  font-weight: bold;
+  line-height: 14px;
+}
+
+/* pill بالعدد على يسار السطر */
+.dropdown-count-pill {
+  margin-right: auto;
+  background: #e8f0fe;
+  color: #1a56db;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 1px 7px;
+  border-radius: 20px;
+}
+
+/* Logout Button */
+.btn-logout {
+  padding: 10px 25px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.btn-logout:hover {
+  background-color: #c0392b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+}
+
+.btn-logout i {
+  font-size: 18px;
+}
+
+
+
+
+/* Tablet: 1024px */
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 0 40px;
+  }
+
+  .nav-links {
+    gap: 40px;
+  }
+
+  .nav-link {
+    font-size: 17px;
+  }
+
+  .logo {
+    font-size: 26px;
+  }
+
+  .btn {
+    padding: 0.45rem 1.2rem;
+    font-size: 15px;
+  }
+}
+
+/* Mobile Landscape & Small Tablets: 768px */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 10px 20px;
+  }
+
+  .container {
+    height: auto;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 10px 0;
+  }
+
+  .logo {
+    font-size: 24px;
+    order: 1;
+    flex: 0 0 auto;
+    margin-right: 0;
+  }
+
+  .auth-buttons {
+    order: 2;
+    gap: 8px;
+    flex: 0 0 auto;
+    margin-left: 0;
+  }
+
+  .nav-links {
+    order: 3;
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    gap: 25px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(42, 92, 175, 0.1);
+    margin: 0;
+  }
+
+  .nav-link {
+    font-size: 15px;
+  }
+
+  .btn {
+    padding: 0.4rem 1rem;
+    font-size: 14px;
+  }
+}
+
+/* Mobile: 480px - 640px */
+@media (max-width: 640px) {
+  .navbar {
+    padding: 10px 15px;
+  }
+
+  .container {
+    gap: 12px;
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+
+  .nav-links {
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .nav-link {
+    font-size: 14px;
+  }
+
+  .auth-buttons {
+    gap: 6px;
+  }
+
+  .btn {
+    padding: 0.35rem 0.9rem;
+    font-size: 13px;
+  }
+}
+
+/* Small Mobile: 320px - 480px */
+@media (max-width: 480px) {
+  .navbar {
+    padding: 8px 12px;
+  }
+
+  .container {
+    gap: 10px;
+  }
+
+  .logo {
+    font-size: 18px;
+  }
+
+  .nav-links {
+    gap: 15px;
+    padding-top: 8px;
+  }
+
+  .nav-link {
+    font-size: 13px;
+  }
+
+  .nav-link::after {
+    bottom: -3px;
+    height: 1.5px;
+  }
+
+  .auth-buttons {
+    gap: 5px;
+  }
+
+  .btn {
+    padding: 0.3rem 0.7rem;
+    font-size: 12px;
+    border-radius: 10px;
+  }
+}
+
+/* Extra Small Mobile: < 360px */
+@media (max-width: 360px) {
+  .logo {
+    font-size: 16px;
+  }
+
+  .nav-links {
+    gap: 12px;
+  }
+
+  .nav-link {
+    font-size: 12px;
+  }
+
+  .btn {
+    padding: 0.25rem 0.6rem;
+    font-size: 11px;
+  }
+}
