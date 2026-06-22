@@ -20,12 +20,23 @@ const AiResult = ({ result, onReset }) => {
 
     return (
         <section className="ai-result p-5 m-3" style={{ direction: "rtl" }}>
+            <style>{`
+                @media (max-width: 768px) {
+                    .ai-result { padding: 12px !important; margin: 0 !important; }
+                    .ai-result-header { flex-wrap: wrap; }
+                    .ai-result-header h4 { font-size: 20px !important; }
+                    .service-action-row { flex-direction: column !important; align-items: flex-start !important; }
+                    .service-btns { width: 100%; }
+                    .service-btns button { flex: 1; }
+                    .bottom-btn { width: 100% !important; max-width: 100% !important; }
+                }
+            `}</style>
 
             <div
                 className="containerr d-flex flex-column"
                 style={{ width: "100%", maxWidth: "1240px", backgroundColor: "white", borderRadius: "16px", padding: "24px" }}
             >
-                <div className="d-flex justify-content-start align-items-center mb-4 gap-3">
+                <div className="ai-result-header d-flex justify-content-start align-items-center mb-4 gap-3">
                     <img src="/ai.png" alt="" />
                     <h4 style={{ fontSize: "28px", margin: 0 }}>تم تحليل المشكلة</h4>
                     {topConfidence !== null && (
@@ -35,7 +46,6 @@ const AiResult = ({ result, onReset }) => {
                     )}
                 </div>
 
-                {/* رسالة السيرفر — تظهر دايماً لو موجودة */}
                 {result?.message && (
                     <div
                         style={{
@@ -52,15 +62,8 @@ const AiResult = ({ result, onReset }) => {
                     </div>
                 )}
 
-                {/* لو مفيش خدمات — رسالة واضحة */}
                 {!hasServices && (
-                    <div
-                        style={{
-                            textAlign: "center",
-                            padding: "32px",
-                            color: "#888",
-                        }}
-                    >
+                    <div style={{ textAlign: "center", padding: "32px", color: "#888" }}>
                         <div style={{ fontSize: "48px", marginBottom: "12px" }}>🔍</div>
                         <p style={{ fontSize: "16px", marginBottom: "0" }}>
                             لم يتم العثور على خدمات مناسبة لهذا الوصف، حاول إعادة الوصف بشكل أكثر تفصيلاً
@@ -71,13 +74,9 @@ const AiResult = ({ result, onReset }) => {
                 {hasServices && (
                     <>
                         <div>
-                            <p style={{ fontSize: "16px", color: "#333", marginBottom: "8px" }}>
-                                وصف المشكلة:
-                            </p>
+                            <p style={{ fontSize: "16px", color: "#333", marginBottom: "8px" }}>وصف المشكلة:</p>
                             {result.suggestedServices.map((service) => (
-                                <p key={service.serviceId}>
-                                    • {service.description || "هذه هي الخدمة المتخصصة التي تناسب وصفك"}
-                                </p>
+                                <p key={service.serviceId}>• {service.description || "هذه هي الخدمة المتخصصة التي تناسب وصفك"}</p>
                             ))}
                         </div>
 
@@ -118,15 +117,13 @@ const AiResult = ({ result, onReset }) => {
 
                                     <h3 className="mt-4">{service.serviceName}</h3>
 
-                                    <div className="d-flex justify-content-between w-100 mt-2" style={{ flexWrap: "wrap", gap: "12px" }}>
-                                        <p style={{ color: "#555", margin: 0 }}>
-                                            {service.category || "خدمة صيانة متخصصة"}
-                                        </p>
-                                        <div className="d-flex gap-3">
+                                    <div className="service-action-row d-flex justify-content-between w-100 mt-2" style={{ flexWrap: "wrap", gap: "12px" }}>
+                                        <p style={{ color: "#555", margin: 0 }}>{service.category || "خدمة صيانة متخصصة"}</p>
+                                        <div className="service-btns d-flex gap-3">
                                             <button
                                                 onClick={() => navigate(`/booking-details`, { state: { service } })}
                                                 className="btn btn-primary"
-                                                style={{ padding: "8px 16px", backgroundColor: "#2A5CAF", borderRadius: "12px", width: "150px", border: "none" }}
+                                                style={{ padding: "8px 16px", backgroundColor: "#2A5CAF", borderRadius: "12px", border: "none" }}
                                             >
                                                 + أضف للحجز
                                             </button>
@@ -160,6 +157,7 @@ const AiResult = ({ result, onReset }) => {
                 {hasServices && (
                     <button
                         onClick={() => navigate("/service")}
+                        className="bottom-btn"
                         style={{ padding: "8px 16px", border: "2px solid #2A5CAF", color: "#2A5CAF", borderRadius: "12px", width: "450px", background: "transparent", cursor: "pointer" }}
                     >
                         عرض جميع الخدمات
@@ -167,15 +165,8 @@ const AiResult = ({ result, onReset }) => {
                 )}
                 <button
                     onClick={onReset}
-                    style={{
-                        padding: "8px 16px",
-                        border: "2px solid #2A5CAF",
-                        color: "#2A5CAF",
-                        borderRadius: "12px",
-                        width: "216px",
-                        background: "transparent",
-                        cursor: "pointer"
-                    }}
+                    className="bottom-btn"
+                    style={{ padding: "8px 16px", border: "2px solid #2A5CAF", color: "#2A5CAF", borderRadius: "12px", width: "216px", background: "transparent", cursor: "pointer" }}
                 >
                     🤖 تشخيص جديد
                 </button>

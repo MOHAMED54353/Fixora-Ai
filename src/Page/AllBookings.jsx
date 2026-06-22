@@ -7,8 +7,7 @@ const PAGE_SIZE = 6;
 
 const parseDate = (dateStr) => {
     if (!dateStr) return 0;
-    const normalized =
-        dateStr.endsWith('Z') || dateStr.includes('+') ? dateStr : dateStr + 'Z';
+    const normalized = dateStr.endsWith('Z') || dateStr.includes('+') ? dateStr : dateStr + 'Z';
     const date = new Date(normalized);
     return isNaN(date.getTime()) ? 0 : date.getTime();
 };
@@ -30,51 +29,34 @@ const AllBookings = () => {
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
-    const [stats, setStats] = useState({
-        totalBookings: 0,
-        inProgress: 0,
-        completed: 0,
-    });
+    const [totalCount, setTotalCount] = useState(0);
+    const [stats, setStats] = useState({ totalBookings: 0, inProgress: 0, completed: 0 });
     const [statsLoading, setStatsLoading] = useState(true);
 
     useEffect(() => {
         const fetchAllBookings = async () => {
             try {
                 setLoading(true);
-                let allBookings = [];
-                let pageIndex = 1;
-                let totalPages = 1;
-
-                do {
-                    const res = await axios.get("/api/Bookings/all", {
-                        params: {
-                            PageSize: 50,
-                            PageIndex: pageIndex,
-                        }
-                    });
-                    allBookings = allBookings.concat(res.data.data || []);
-                    totalPages = Math.ceil(res.data.count / (res.data.pageSize || 50));
-                    pageIndex++;
-                } while (pageIndex <= totalPages);
-
-                allBookings.sort((a, b) => {
+                const res = await axios.get("/api/Bookings/all", {
+                    params: { PageSize: PAGE_SIZE, PageIndex: currentPage },
+                });
+                const raw = res.data.data || [];
+                raw.sort((a, b) => {
                     const statusDiff = getStatusRank(a) - getStatusRank(b);
                     if (statusDiff !== 0) return statusDiff;
-                    return parseDate(b.scheduledDate || b.ScheduledDate) - parseDate(a.scheduledDate || a.ScheduledDate);
+                    return parseDate(b.scheduledDate) - parseDate(a.scheduledDate);
                 });
-
-                setBookings(allBookings);
+                setBookings(raw);
+                setTotalCount(res.data.count || 0);
             } catch (err) {
                 console.error("❌ Error fetching bookings:", err);
             } finally {
                 setLoading(false);
             }
         };
-
         fetchAllBookings();
-    }, []);
+    }, [currentPage]);
 
-    // fetch stats from API
     useEffect(() => {
         const fetchStats = async () => {
             try {
@@ -91,13 +73,10 @@ const AllBookings = () => {
                 setStatsLoading(false);
             }
         };
-
         fetchStats();
     }, []);
 
-    // pagination
-    const totalPages = Math.ceil(bookings.length / PAGE_SIZE);
-    const paginatedData = bookings.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+    const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
     const goTo = (page) => {
         if (page < 1 || page > totalPages) return;
@@ -111,40 +90,42 @@ const AllBookings = () => {
         return [currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2];
     };
 
+    const statCards = [
+        { label: "إجمالي الحجوزات", value: stats.totalBookings, icon: "fa-calendar-check", color: "#2A5CAF" },
+        { label: "قيد التنفيذ", value: stats.inProgress, icon: "fa-spinner", color: "#F97316" },
+        { label: "مكتملة", value: stats.completed, icon: "fa-circle-check", color: "#22C55E" },
+    ];
+
     return (
         <>
             <NavUser showMenu={false} />
-            <div className="container d-flex flex-column justify-content-center mx-auto mt-5">
-                <h3 style={{ fontSize: "36px", color: "#333D4D", marginTop: "50px" }}>كل الحجوزات</h3>
-                <p style={{ fontSize: "22px" }}>عرض وإدارة جميع حجوزات الصيانة والخدمات</p>
+            <div className="px-3 py-3 px-md-5 mx-0 mx-md-4 mt-5 pt-3 text-center">
+                <h3 style={{ fontSize: "30px", color: "#333D4D", marginTop: "20px" }}>كل الحجوزات</h3>
+                <p style={{ fontSize: "18px", color: "#888" }}>عرض وإدارة جميع حجوزات الصيانة والخدمات</p>
             </div>
 
-            <section className="section1 p-5 mx-auto">
-                <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-                    {[
-                        { label: "إجمالي الحجوزات", value: statsLoading ? "جارٍ التحميل..." : stats.totalBookings },
-                        { label: "قيد التنفيذ", value: statsLoading ? "جارٍ التحميل..." : stats.inProgress },
-                        { label: "مكتملة", value: statsLoading ? "جارٍ التحميل..." : stats.completed },
-                    ].map(card => (
-                        <div key={card.label} style={{ minWidth: "380px", backgroundColor: "white", padding: "24px", borderRadius: "16px", margin: "12px 0" }}>
-                            <p style={{ fontSize: "22px", marginBottom: "8px" }}>{card.label}</p>
-                            <h4>{card.value}</h4>
+            <section className="px-3 px-md-5 mx-0 mx-md-4 pb-5">
+                <div className="row py-5 g-3 mb-4">
+                    {statCards.map(card => (
+                        <div key={card.label} className="col-12 col-md-4">
+                            <div style={{ backgroundColor: "white", padding: "28px 32px", borderRadius: "16px", height: "100%" }}>
+                                <div className="d-flex justify-content-between align-items-center mb-3">
+                                    <p className="mb-0" style={{ fontSize: "20px", color: "#333D4D" }}>{card.label}</p>
+                                    <i className={`fa-solid ${card.icon}`} style={{ fontSize: "22px", color: card.color }} />
+                                </div>
+                                <h4 style={{ fontSize: "32px", fontWeight: "700", marginBottom: 0, color: "#1A202C" }}>
+                                    {statsLoading ? "..." : card.value}
+                                </h4>
+                            </div>
                         </div>
                     ))}
                 </div>
 
-                <BookingsTable bookings={paginatedData} loading={loading} />
+                <BookingsTable bookings={bookings} loading={loading} />
 
-                {/* pagination */}
+                {/* Pagination */}
                 {!loading && totalPages > 1 && (
-                    <div style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        gap: "6px",
-                        marginTop: "28px",
-                        direction: "ltr",
-                    }}>
+                    <div className="d-flex justify-content-center align-items-center flex-wrap gap-1 mt-4" style={{ direction: "ltr" }}>
                         <PagBtn onClick={() => goTo(currentPage - 1)} disabled={currentPage === 1}>‹</PagBtn>
 
                         {getPageNumbers()[0] > 1 && (
@@ -169,9 +150,9 @@ const AllBookings = () => {
                     </div>
                 )}
 
-                {!loading && bookings.length > 0 && (
+                {!loading && totalCount > 0 && (
                     <p style={{ textAlign: "center", marginTop: "12px", fontSize: "13px", color: "#9CA3AF" }}>
-                        عرض {(currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, bookings.length)} من {bookings.length} حجز
+                        عرض {(currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, totalCount)} من {totalCount} حجز
                     </p>
                 )}
             </section>

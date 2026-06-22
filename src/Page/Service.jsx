@@ -17,11 +17,9 @@ const Service = ({ user }) => {
   const [error, setError] = useState(null);
   const [cart, setCart] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
-
   const [searchText, setSearchText] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
   const [allCategories, setAllCategories] = useState([]);
-
   const [currentPage, setCurrentPage] = useState(1);
 
   const fetchServices = async (page = 1, search = "", category = "") => {
@@ -38,6 +36,7 @@ const Service = ({ user }) => {
       });
 
       const servicesData = res.data.data || [];
+      console.log("services", servicesData);
       setServices(servicesData);
       setTotalCount(res.data.count || 0);
 
@@ -55,18 +54,18 @@ const Service = ({ user }) => {
 
   useEffect(() => {
     fetchServices(1, "", "");
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     setCurrentPage(1);
     fetchServices(1, searchText, filterCategory);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchText, filterCategory]);
 
   useEffect(() => {
     fetchServices(currentPage, searchText, filterCategory);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
   const handleBookClick = (service) => {
@@ -112,8 +111,21 @@ const Service = ({ user }) => {
       if (currentPage < totalPages - 2) pages.push("...");
       pages.push(totalPages);
     }
-
     return pages;
+  };
+
+  const categoryLabels = {
+    battery: "البطاريات",
+    brakes: "الفرامل",
+    electrical: "كهرباء السيارات",
+    oil_leak: "تسريب الزيت",
+    starting: "مشاكل التشغيل",
+    transmission: "ناقل الحركة",
+    cooling: "نظام التبريد",
+    suspension: "نظام التعليق",
+    steering: "نظام التوجيه",
+    engine: "المحرك",
+    maintenance: "الصيانة الدورية",
   };
 
   return (
@@ -194,9 +206,10 @@ const Service = ({ user }) => {
           }}
         >
           <option value="">كل التخصصات</option>
-          {allCategories.map((cat, idx) => (
-            <option key={idx} value={cat}>
-              {cat}
+
+          {allCategories.map((cat) => (
+            <option key={cat} value={cat}>
+              {categoryLabels[cat] || cat}
             </option>
           ))}
         </select>
@@ -323,7 +336,6 @@ const Service = ({ user }) => {
           </button>
         </div>
       )}
-
       <ToastContainer position="top-center" autoClose={3000} rtl pauseOnHover />
       <Scrollbtn />
     </>

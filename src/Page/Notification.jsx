@@ -5,19 +5,20 @@ import axios from '../Utils/axiosConfig'
 import { useNavigate } from 'react-router'
 
 const typeConfig = {
-    TechnicianAssigned: { imgSrc: "/not.png" },
-    NewReview: { imgSrc: "/rev.png" },
-    AdditionalIssueAdded: { imgSrc: "/can.png" },
-    BookingCompleted: { imgSrc: "/com.png" },
-    AdditionalIssueApproved: { imgSrc: "/com.png" },
-    AdditionalIssueRejected: { imgSrc: "/can.png" },
-    BookingCancelled: { imgSrc: "/ff.png" },
-    default: { imgSrc: "/not.png" },
+    TechnicianAssigned: { imgSrc: "/not.png", arText: "تم تعيين فني" },
+    NewReview: { imgSrc: "/rev.png", arText: "تقييم جديد" },
+    AdditionalIssueAdded: { imgSrc: "/can.png", arText: "تكلفة إضافية" },
+    BookingCompleted: { imgSrc: "/com.png", arText: "اكتمل الحجز" },
+    AdditionalIssueApproved: { imgSrc: "/com.png", arText: "تمت الموافقة" },
+    AdditionalIssueRejected: { imgSrc: "/can.png", arText: "تم الرفض" },
+    BookingCancelled: { imgSrc: "/ff.png", arText: "تم إلغاء الحجز" },
+    PaymentCompleted :{ imgSrc: "/com.png", arText: "اكتمل الدفع" },
+    PaymentFailed :{ imgSrc: "/can.png", arText: "فشل الدفع" },
+    default: { imgSrc: "/not.png", arText: "إشعار" },
 }
 
 const getConfig = (type) => typeConfig[type] || typeConfig.default
 
-// Helper: يطلق event عشان NavUser يعمل re-fetch للـ unread count
 const notifyNavbar = () => window.dispatchEvent(new Event("notificationsRead"))
 
 const Notification = () => {
@@ -37,6 +38,8 @@ const Notification = () => {
             const res = await axios.get('/api/Notifications', { params: { PageIndex: pageIndex, PageSize: pageSize } })
             setItems(res.data.data || [])
             setTotal(res.data.count || 0)
+            console.log("data", res.data.data);
+
         } catch (err) {
             if (retry > 0) {
                 fetchNotifications(retry - 1)
@@ -69,7 +72,7 @@ const Notification = () => {
             await axios.patch(`/api/Notifications/${id}/mark-read`)
             setItems(prev => prev.map(n => n.id === id ? { ...n, isRead: true } : n))
             setUnreadCount(prev => Math.max(prev - 1, 0))
-            notifyNavbar() // ← إشعار الـ NavUser
+            notifyNavbar()
         } catch (err) {
             console.error(err)
         }
@@ -80,7 +83,7 @@ const Notification = () => {
             await axios.patch('/api/Notifications/mark-all-read')
             setItems(prev => prev.map(n => ({ ...n, isRead: true })))
             setUnreadCount(0)
-            notifyNavbar() // ← إشعار الـ NavUser
+            notifyNavbar()
         } catch (err) {
             console.error(err)
         }
@@ -130,9 +133,10 @@ const Notification = () => {
                 ) : items.length === 0 ? (
                     <p className="text-center py-5 text-muted">مفيش إشعارات حالياً 📭</p>
                 ) : (
-                    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                         {items.map(n => {
-                            const { imgSrc } = getConfig(n.type)
+                            // 2. استخراج arText هنا
+                            const { imgSrc, arText } = getConfig(n.type)
                             return (
                                 <div
                                     key={n.id}
@@ -146,7 +150,7 @@ const Notification = () => {
                                     }}
                                 >
                                     <div className="d-flex align-items-start gap-3">
-                                        <div className="flex-shrink-0" style={{ width: 44, height: 44 }}>
+                                        <div className="flex-shrink-0" style={{ width: "44px", height: "44px" }}>
                                             <img
                                                 src={imgSrc}
                                                 alt={n.type}
@@ -160,7 +164,7 @@ const Notification = () => {
                                                     {n.title}
                                                 </h5>
                                                 <span style={{ fontSize: "11px", color: "#aab0c3", whiteSpace: "nowrap" }}>
-                                                    <i className="far fa-clock me-1"></i>
+                                                    <i className="far fa-clock mx-1"></i>
                                                     {new Date(n.createdAt).toLocaleString("ar-EG", {
                                                         year: "numeric",
                                                         month: "2-digit",
@@ -185,10 +189,11 @@ const Notification = () => {
                                                     borderRadius: "20px",
                                                     display: "inline-flex",
                                                     alignItems: "center",
-                                                    gap: "4"
+                                                    gap: "8px"
                                                 }}>
                                                     <span className="rounded-circle" style={{ width: "6px", height: "6px", background: "#888", flexShrink: 0 }} />
-                                                    {n.type}
+                                                    {/* 3. استبدال الـ n.type بالـ arText ليعرض بالعربي */}
+                                                    {arText}
                                                 </span>
 
                                                 {!n.isRead && (

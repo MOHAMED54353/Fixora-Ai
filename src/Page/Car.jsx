@@ -5,8 +5,9 @@ import NavUser from "../Component/NavUser";
 import CarCard from "../Component/CarCard.jsx";
 import AiBtn from "../Component/AiBtn.jsx";
 import AddCar from "../Component/AddCar.jsx";
-import  axios  from "../Utils/axiosConfig.jsx";
+import axios from "../Utils/axiosConfig.jsx";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Car = () => {
     const [cars, setCars] = useState([]);
@@ -21,7 +22,7 @@ const Car = () => {
                 console.log("access Token:", token ? "OK" : "Missing");
                 const response = await axios.get("/api/Vehicles");
                 setCars(Array.isArray(response.data) ? response.data : []);
-                console.log("number of cars:", Array.isArray(response.data) ? response.data.length : 0,":the data",response.data);
+                console.log("number of cars:", Array.isArray(response.data) ? response.data.length : 0, ":the data", response.data);
                 setCars(Array.isArray(response.data) ? response.data : []);
             } catch (error) {
                 console.error("❌ Error fetching cars:", error);
@@ -40,32 +41,23 @@ const Car = () => {
 
 
     const handleDelete = async (carId) => {
-        if (!window.confirm("هل أنت متأكد من حذف هذه السيارة؟"))
-            return;
-
+        if (!window.confirm("هل أنت متأكد من حذف هذه السيارة؟")) return;
         try {
             await axios.delete(`/api/Vehicles/${carId}`);
-
             setCars((prev) => prev.filter((car) => car.id !== carId));
             toast.success("تم حذف السيارة بنجاح");
         } catch (error) {
-            console.error("❌ Error deleting car:", error);
+            const status = error.response?.status;
+            const message = error.response?.data?.errorMessage || error.response?.data?.message;
 
-            if (error.response) {
-                const status = error.response.status;
-                const message = error.response.data?.message;
-
-                if (status === 500) {
-                    toast.error("لا يمكن حذف السيارة لأنها مرتبطة بحجز قائم أو حجوزات سابقة");
-                } else if (status === 403) {
-                    toast.error("غير مصرح لك بحذف هذه السيارة");
-                } else if (status === 404) {
-                    toast.error("السيارة غير موجودة");
-                } else {
-                    toast.error(message || "حدث خطأ أثناء حذف السيارة");
-                }
+            if (status === 400) {
+                toast.error("لا يمكن حذف السيارة لأنها مرتبطة بحجز قائم أو حجوزات سابقة");
+            } else if (status === 403) {
+                toast.error("غير مصرح لك بحذف هذه السيارة");
+            } else if (status === 404) {
+                toast.error("السيارة غير موجودة");
             } else {
-                toast.error("فشل الاتصال بالسيرفر");
+                toast.error(message || "حدث خطأ أثناء حذف السيارة");
             }
         }
     };

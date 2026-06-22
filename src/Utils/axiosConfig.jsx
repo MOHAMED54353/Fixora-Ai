@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://carmaintenance.runasp.net",
+  baseURL: "http://carmaintenancefixora.runasp.net/",
   headers: { "Content-Type": "application/json" },
 });
 
@@ -65,12 +65,16 @@ axiosInstance.interceptors.response.use(
 
       clearAuthData();
       window.location.href = "/login";
+
+      return Promise.reject(
+        new Error("Missing access token or refresh token")
+      );
     }
 
     try {
       //  axios العادي مش axiosInstance عشان نتجنب الـ loop
       const res = await axios.post(
-        `${axiosInstance.defaults.baseURL}/api/Account/refresh-token`,
+        `${axiosInstance.defaults.baseURL}api/Account/refresh-token`,
         { token: accessToken, refreshToken }
       );
 

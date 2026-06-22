@@ -75,13 +75,12 @@ const Login = () => {
       );
       console.log("FULL LOGIN RESPONSE:", response.data);
 
-      // تخزين الـ token
       if (response.data.token) {
         localStorage.setItem("refreshToken", response.data.refreshToken);
         localStorage.setItem("accessToken", response.data.token);
         localStorage.setItem("tokenExpiry", response.data.tokenExpiry);
 
-        scheduleTokenRefresh(); // ✅ مهم جدًا هنا
+        scheduleTokenRefresh(); // هنا دالة تحديث التوكن تلقائيًا
       }
       let role = "User";
       if (response.data.token) {

@@ -103,7 +103,7 @@ const Navbar = () => {
           </li>
 
           <li>
-            <a href="#footer" className="nav-link" onClick={() => navigate("/chatbot")}>
+            <a href="#footer" className="nav-link">
               تواصل معنا
             </a>
           </li>

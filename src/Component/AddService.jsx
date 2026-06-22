@@ -112,12 +112,22 @@ const AddService = ({ onClose, onServiceAdded, serviceToEdit }) => {
                             }}
                         >
                             <option value="">اختر الفئة</option>
-                            <option value="فحص">فحص</option>
-                            <option value="إصلاح">إصلاح</option>
-                            <option value="صيانة دورية">صيانة دورية</option>
-                            <option value="تنظيف">تنظيف</option>
+                            <option value="oil_change">تغيير زيت</option>
+                            <option value="oil_leak">تسريب زيت</option>
+                            <option value="brakes">فرامل</option>
+                            <option value="tires">إطارات</option>
+                            <option value="alignment_balancing">ضبط زوايا وتوازن</option>
+                            <option value="suspension">تعليق</option>
+                            <option value="steering">توجيه</option>
+                            <option value="transmission">ناقل حركة</option>
+                            <option value="ac">تكييف</option>
+                            <option value="cooling">تبريد</option>
+                            <option value="engine">محرك</option>
+                            <option value="exhaust">عادم</option>
+                            <option value="starting">تشغيل</option>
                             <option value="electrical">كهرباء</option>
-                            <option value="suspension">نظام التعليق (Suspension)</option>
+                            <option value="battery">بطارية</option>
+                            <option value="cleaning">تنظيف</option>
                         </select>
                         {errors.category && (
                             <div className="text-danger">{errors.category.message}</div>
@@ -176,11 +186,22 @@ const AddService = ({ onClose, onServiceAdded, serviceToEdit }) => {
                             }}
                         >
                             <option value="">اختر التخصص</option>
-                            <option value="ميكانيكا">ميكانيكا</option>
-                            <option value="كهرباء">كهرباء</option>
-                            <option value="سمكرة">سمكرة</option>
-                            <option value="عفشة">عفشة</option>
-                            <option value="نظافة">نظافة</option>
+                            <option value="engine">ميكانيكا محركات</option>
+                            <option value="transmission">ناقل الحركة</option>
+                            <option value="brakes">فرامل</option>
+                            <option value="suspension">تعليق</option>
+                            <option value="steering">توجيه</option>
+                            <option value="oil_change">تغيير زيوت</option>
+                            <option value="oil_leak">تسريب زيت</option>
+                            <option value="tires">إطارات</option>
+                            <option value="alignment_balancing">ضبط زوايا وتوازن</option>
+                            <option value="electrical">كهرباء</option>
+                            <option value="battery">بطارية</option>
+                            <option value="ac">تكييف</option>
+                            <option value="cooling">تبريد</option>
+                            <option value="exhaust">عادم</option>
+                            <option value="starting">مشاكل تشغيل</option>
+                            <option value="cleaning">تنظيف وتلميع</option>
                         </select>
                         {errors.specialization && (
                             <div className="text-danger">{errors.specialization.message}</div>

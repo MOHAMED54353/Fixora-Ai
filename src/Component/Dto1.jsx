@@ -411,7 +411,12 @@ const Dto1 = ({ booking, onCancel }) => {
                             </div>
                             <div>
                                 <p className="customer-name">{booking.technicianName || 'غير متاح'}</p>
-                                <div className="tech-badge">
+                                <div className="tech-badge" style={{
+                                    maxWidth: "180px",
+                                    wordBreak: "break-word",
+                                    overflowWrap: "break-word",
+                                    whiteSpace: "normal"
+                                }}>
                                     <i className="fa-solid fa-shield-check"></i>
                                     {booking.technicianSpecialization || 'غير متاح'}
                                 </div>

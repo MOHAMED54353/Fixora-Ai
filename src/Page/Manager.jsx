@@ -16,7 +16,6 @@ const PAGE_SIZE = 5;
 
 const Manager = ({ user }) => {
   const navigate = useNavigate();
-
   const [technicians, setTechnicians] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -42,7 +41,6 @@ const Manager = ({ user }) => {
     todayRevenue: 0,
   });
 
-  // ── Fetch technicians ──
   const fetchTechnicians = async () => {
     try {
       setLoading(true);
@@ -69,7 +67,6 @@ const Manager = ({ user }) => {
   };
   useEffect(() => { fetchTechnicians(); }, []);
 
-  // ── Fetch services (server-side pagination) ──
   const fetchServices = async (page = 1) => {
     try {
       setServicesLoading(true);
@@ -88,16 +85,11 @@ const Manager = ({ user }) => {
   };
   useEffect(() => { fetchServices(1); }, []);
 
-  // ── Fetch bookings ──
   const fetchBookings = async () => {
     try {
       setBookingsLoading(true);
-      const today = new Date();
-      const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0).toISOString();
-      const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59).toISOString();
-
-      const res = await axios.get("/api/Bookings/all", {
-        params: { FromDate: startOfDay, ToDate: endOfDay, PageIndex: 1, PageSize: 20 },
+      const res = await axios.get("/api/Bookings/today", {
+        params: { PageIndex: 1, PageSize: 20 },
       });
       setBookings(res.data.data || res.data || []);
     } catch (err) {
@@ -108,7 +100,6 @@ const Manager = ({ user }) => {
   };
   useEffect(() => { fetchBookings(); }, []);
 
-  // ── Fetch dashboard stats ──
   const fetchDashboardStats = async () => {
     try {
       setStatsLoading(true);
@@ -122,10 +113,7 @@ const Manager = ({ user }) => {
   };
   useEffect(() => { fetchDashboardStats(); }, []);
 
-  // ── Handlers ──
-  const handleAddOrUpdateTechnician = () => {
-    fetchTechnicians();
-  };
+  const handleAddOrUpdateTechnician = () => { fetchTechnicians(); };
 
   const handleDeleteTechnician = async (id) => {
     if (!window.confirm("هل أنت متأكد من حذف الفني؟")) return;
@@ -144,17 +132,14 @@ const Manager = ({ user }) => {
     }
   };
 
-  const handleServiceAdded = (service, isEdit = false) => {
+  const handleServiceAdded = () => {
     fetchServices(servicesPage);
-    toast.success(isEdit ? "تم تعديل بيانات الخدمة بنجاح" : "تم إضافة الخدمة بنجاح");
   };
 
   const handleDeleteService = async (serviceId) => {
     const service = services.find(s => s.id === serviceId);
     const serviceName = service?.name || service?.Name || "هذه الخدمة";
-
     if (!window.confirm(`تحذير: حذف "${serviceName}" سيؤثر على الحجوزات المرتبطة بها.\nهل أنت متأكد؟`)) return;
-
     try {
       await axios.delete(`/api/Services/${serviceId}`);
       toast.success("تم حذف الخدمة بنجاح");
@@ -171,63 +156,76 @@ const Manager = ({ user }) => {
     }
   };
 
+  const statCardStyle = {
+    backgroundColor: "white",
+    padding: "28px 32px",
+    borderRadius: "16px",
+    height: "100%",
+  };
+
   return (
     <>
       <ToastContainer position="top-center" />
       <NavUser showMenu={false} user={user} />
-
-      <section className="section1 p-5 mx-4">
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <div style={{ minWidth: "380px", backgroundColor: "white", padding: "24px", borderRadius: "16px" }}>
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <p style={{ fontSize: "22px" }}>الفنيين المتاحين</p>
-              <i className="fa-solid fa-user-check fs-5 text-success"></i>
+      <section className="px-3 px-md-5 py-5 mx-0 mx-md-4">
+        <div className="row g-4">
+          <div className="col-12 col-md-4">
+            <div style={statCardStyle}>
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <p className="mb-0" style={{ fontSize: "18px" }}>الفنيين المتاحين</p>
+                <i className="fa-solid fa-user-check fs-5 text-success"></i>
+              </div>
+              <h4>{statsLoading ? "..." : dashboardStats.availableTechnicians}</h4>
             </div>
-            <h4>{statsLoading ? "جارٍ التحميل..." : dashboardStats.availableTechnicians}</h4>
           </div>
 
-          <div
-            onClick={() => navigate("all-rating")}
-            style={{ minWidth: "380px", backgroundColor: "white", padding: "24px", borderRadius: "16px", cursor: "pointer" }}
-          >
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <p style={{ fontSize: "22px" }}>متوسط التقييم</p>
-              <p style={{ fontSize: "22px" }}><i className="fa-solid fa-star fs-5 text-warning"></i></p>
+          <div className="col-12 col-md-4">
+            <div style={{ ...statCardStyle, cursor: "pointer" }} onClick={() => navigate("all-rating")}>
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <p className="mb-0" style={{ fontSize: "18px" }}>متوسط التقييم</p>
+                <i className="fa-solid fa-star fs-5 text-warning"></i>
+              </div>
+              <h4>{statsLoading ? "..." : dashboardStats.averageRating}</h4>
             </div>
-            <h4>{statsLoading ? "جارٍ التحميل..." : dashboardStats.averageRating}</h4>
           </div>
 
-          <div style={{ minWidth: "380px", backgroundColor: "white", padding: "24px", borderRadius: "16px" }}>
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <p style={{ fontSize: "22px" }}>الحجوزات اليوم</p>
-              <i className="fa-solid fa-calendar-days fs-5"></i>
+          <div className="col-12 col-md-4">
+            <div style={statCardStyle}>
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <p className="mb-0" style={{ fontSize: "18px" }}>الحجوزات اليوم</p>
+                <i className="fa-solid fa-calendar-days fs-5"></i>
+              </div>
+              <h4>{bookings.length}</h4>
             </div>
-            <h4>{bookings.length}</h4>
           </div>
         </div>
       </section>
 
-      <section className="section3 p-5 mx-4">
-        {/* ── الفنيين ── */}
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <h2 className="fw-normal" style={{ fontSize: "28px" }}>
-            إدارة الفنيين <span className="mx-2" style={{ fontSize: "16px" }}>({technicians.length})</span>
+      {/* Main Content */}
+      <section className="px-3 px-md-5 py-2 mx-0 mx-md-4">
+
+        {/* Technicians Header */}
+        <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+          <h2 className="fw-normal mb-0" style={{ fontSize: "24px" }}>
+            إدارة الفنيين
+            <span className="mx-2" style={{ fontSize: "16px", color: "#888" }}>({technicians.length})</span>
           </h2>
           <button
             className="btn btn-primary px-3"
-            style={{ padding: "8px 16px", backgroundColor: "#2A5CAF", fontSize: "16px", fontWeight: "bold", borderRadius: "12px" }}
+            style={{ backgroundColor: "#2A5CAF", fontSize: "15px", fontWeight: "bold", borderRadius: "12px" }}
             onClick={() => setShowModal({ open: true, tech: null })}
           >
             + إضافة فني جديد
           </button>
         </div>
 
+        {/* Technicians Grid */}
         {loading ? (
           <p className="text-center">جارٍ تحميل الفنيين...</p>
         ) : (
-          <div className="row g-5 my-4">
+          <div className="row g-4 my-2">
             {technicians.map(tech => (
-              <div className="col-md-6 col-lg-4" key={tech.id}>
+              <div className="col-12 col-sm-6 col-xl-4" key={tech.id}>
                 <TechnicianCard
                   technician={tech}
                   onDelete={() => handleDeleteTechnician(tech.id)}
@@ -238,13 +236,15 @@ const Manager = ({ user }) => {
           </div>
         )}
 
-        <div className="d-flex justify-content-between align-items-center my-5">
-          <h2 className="fw-normal mt-4" style={{ fontSize: "28px" }}>
-            إدارة الخدمات <span className="mx-2" style={{ fontSize: "16px" }}>({servicesTotalCount})</span>
+        {/* Services Header */}
+        <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 my-5">
+          <h2 className="fw-normal mb-0" style={{ fontSize: "24px" }}>
+            إدارة الخدمات
+            <span className="mx-2" style={{ fontSize: "16px", color: "#888" }}>({servicesTotalCount})</span>
           </h2>
           <button
             className="btn px-3"
-            style={{ backgroundColor: "#ffffff", padding: "8px 16px", color: "#2A5CAF", border: "2px solid #2A5CAF", fontSize: "16px", fontWeight: "bold", borderRadius: "12px" }}
+            style={{ backgroundColor: "#ffffff", color: "#2A5CAF", border: "2px solid #2A5CAF", fontSize: "15px", fontWeight: "bold", borderRadius: "12px" }}
             onClick={() => setShowServiceModal({ open: true, service: null })}
           >
             + إضافة خدمة جديدة
@@ -263,10 +263,11 @@ const Manager = ({ user }) => {
           onPageChange={(p) => fetchServices(p)}
         />
 
-        {/* ── الحجوزات ── */}
-        <div className="d-flex justify-content-between align-items-center my-5">
-          <h2 className="fw-normal mt-4" style={{ fontSize: "28px" }}>
-            الحجوزات <span className="mx-2" style={{ fontSize: "16px" }}>({bookings.length})</span>
+        {/* Bookings Header */}
+        <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 my-5">
+          <h2 className="fw-normal mb-0" style={{ fontSize: "24px" }}>
+            الحجوزات
+            <span className="mx-2" style={{ fontSize: "16px", color: "#888" }}>({bookings.length})</span>
           </h2>
           <Link to="/all-bookings" style={{ color: "#2A5CAF", fontSize: "16px", fontWeight: "bold" }}>
             مشاهدة الكل <i className="fa-solid fa-left-long"></i>
@@ -279,6 +280,7 @@ const Manager = ({ user }) => {
           onDelete={(id) => console.log("Delete booking", id)}
           onEdit={(booking) => console.log("Edit booking", booking)}
         />
+
       </section>
 
       {showModal.open && (

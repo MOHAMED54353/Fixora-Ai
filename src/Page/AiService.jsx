@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import AiResult from "../Component/AiResult";
 
 const AiService = () => {
     const navigate = useNavigate();
-
     const [description, setDescription] = useState("");
 
     const [result, setResult] = useState(() => {
@@ -20,8 +19,22 @@ const AiService = () => {
     const [error, setError] = useState("");
 
     const handleSubmit = async () => {
-        if (!description.trim()) {
-            alert("من فضلك اكتب وصف المشكلة");
+        const trimmed = description.trim();
+
+        if (!trimmed) {
+            setError("من فضلك اكتب وصف المشكلة");
+            return;
+        }
+
+        if (trimmed.length < 10) {
+            setError(
+                "الوصف قصير جداً، اكتب على الأقل 10 حروف للحصول على تشخيص دقيق"
+            );
+            return;
+        }
+
+        if (trimmed.length > 500) {
+            setError("الوصف طويل جداً، الحد الأقصى 500 حرف");
             return;
         }
 
@@ -33,23 +46,30 @@ const AiService = () => {
         try {
             const response = await fetch("/api/Services/analyze-problem", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                },
                 body: JSON.stringify({
-                    problemDescription: description,
+                    problemDescription: trimmed,
                     vehicleId: null,
                 }),
             });
 
             if (!response.ok) {
-                const errText = await response.text();
-                throw new Error(errText || "حدث خطأ أثناء الاتصال بالخادم");
-            }
+                let errMsg = "حدث خطأ في الخادم، حاول مرة أخرى";
 
+                try {
+                    const errData = await response.json();
+                    errMsg = errData?.message || errData?.title || errMsg;
+                } catch {
+                    // Ignore JSON parsing errors
+                }
+                throw new Error(errMsg);
+            }
             const data = await response.json();
             setResult(data);
-            sessionStorage.setItem("aiResult", JSON.stringify(data)); // ← احفظ النتيجة
+            sessionStorage.setItem("aiResult", JSON.stringify(data));
             console.log("data", data);
-
         } catch (err) {
             setError(err.message || "حدث خطأ غير متوقع");
         } finally {
@@ -61,30 +81,46 @@ const AiService = () => {
         setResult(null);
         setDescription("");
         setError("");
-        sessionStorage.removeItem("aiResult"); // ← امسح لما يعمل تشخيص جديد
+        sessionStorage.removeItem("aiResult");
     };
+
+    const charCount = description.length;
+    const isNearLimit = charCount > 450;
+    const isOverLimit = charCount > 500;
 
     return (
         <>
-            <nav className="d-block p-3 bg-white" style={{ direction: "rtl" }}>
-                <a
+            <nav
+                className="d-block p-3 bg-white"
+                style={{ direction: "rtl" }}
+            >
+                <div
                     className="logo2"
                     onClick={() => navigate("/home")}
-                    style={{ cursor: "pointer", marginRight: "50px", fontWeight: "bold" }}
+                    style={{
+                        cursor: "pointer",
+                        marginRight: "50px",
+                        fontWeight: "bold",
+                    }}
                 >
-                    <img src="/logo.svg" alt="" />
-                </a>
+                    <img src="/logo.svg" alt="Logo" />
+                </div>
             </nav>
 
             {!result && (
                 <>
                     <section>
                         <div className="text-center mt-4 p-5">
-                            <h2 className="fw-bold" style={{ color: "#2A5CAF" }}>
+                            <h2
+                                className="fw-bold"
+                                style={{ color: "#2A5CAF" }}
+                            >
                                 شخّص مشكلة سيارتك بالذكاء الاصطناعي
                             </h2>
+
                             <p>
-                                أكتب وصف دقيق للمشكلة وسيتم تحليلها باستخدام تقنية AI المتطورة
+                                أكتب وصف دقيق للمشكلة وسيتم تحليلها باستخدام
+                                تقنية AI المتطورة
                             </p>
                         </div>
                     </section>
@@ -105,28 +141,82 @@ const AiService = () => {
                                 marginBottom: "80px",
                             }}
                         >
-                            <label htmlFor="aiDescription" style={{ fontSize: "22px", fontWeight: "400" }}>
+                            <label
+                                htmlFor="aiDescription"
+                                style={{
+                                    fontSize: "22px",
+                                    fontWeight: "400",
+                                }}
+                            >
                                 وصف المشكلة
                             </label>
 
-                            <textarea
-                                id="aiDescription"
-                                className="form-control bg-white"
-                                placeholder="مثال: أسمع صوت طقطقة في الموتور عند التشغيل الصباحي، ويزداد الصوت عند السرعات العالية فوق 80 كم/س. أيضاً ألاحظ اهتزاز خفيف في المقود.... "
+                            <div
                                 style={{
-                                    height: "300px",
-                                    width: "100%",
-                                    border: "2px solid #2A5CAF",
-                                    fontSize: "18px",
-                                    resize: "vertical",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: "6px",
                                 }}
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                            ></textarea>
+                            >
+                                <textarea
+                                    id="aiDescription"
+                                    className="form-control bg-white"
+                                    placeholder="مثال: أسمع صوت طقطقة في الموتور عند التشغيل الصباحي، ويزداد الصوت عند السرعات العالية فوق 80 كم/س. أيضاً ألاحظ اهتزاز خفيف في المقود..."
+                                    style={{
+                                        height: "300px",
+                                        width: "100%",
+                                        border: `2px solid ${isOverLimit
+                                                ? "#b91c1c"
+                                                : "#2A5CAF"
+                                            }`,
+                                        fontSize: "18px",
+                                        resize: "vertical",
+                                    }}
+                                    value={description}
+                                    onChange={(e) => {
+                                        setDescription(e.target.value);
 
-                            <small style={{ fontSize: "14px", color: "#333D4D" }}>
-                                💡 يعتمد التشخيص على الوصف المُدخل، وكلما كان الوصف أدق كان التشخيص أكثر دقة.
-                            </small>
+                                        if (error) {
+                                            setError("");
+                                        }
+                                    }}
+                                />
+
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <small
+                                        style={{
+                                            fontSize: "14px",
+                                            color: "#333D4D",
+                                        }}
+                                    >
+                                        💡 كلما كان الوصف أدق كان التشخيص أكثر
+                                        دقة
+                                    </small>
+
+                                    <small
+                                        style={{
+                                            fontSize: "13px",
+                                            color: isOverLimit
+                                                ? "#b91c1c"
+                                                : isNearLimit
+                                                    ? "#c2570a"
+                                                    : "#6B7280",
+                                            fontWeight: isNearLimit
+                                                ? "600"
+                                                : "400",
+                                            direction: "ltr",
+                                        }}
+                                    >
+                                        {charCount} / 500
+                                    </small>
+                                </div>
+                            </div>
 
                             <button
                                 className="btn btn-primary mt-auto"
@@ -142,21 +232,46 @@ const AiService = () => {
                                     justifyContent: "center",
                                     alignItems: "center",
                                     gap: "10px",
+                                    opacity: loading ? 0.8 : 1,
                                 }}
                                 onClick={handleSubmit}
                                 disabled={loading}
                             >
-                                {loading ? <i className="fa-solid fa-spinner fa-spin"></i> : null}
-                                {loading ? " جاري التشخيص..." : "إبدأ التشخيص الذكي"}
+                                {loading && (
+                                    <i className="fa-solid fa-spinner fa-spin"></i>
+                                )}
+
+                                {loading
+                                    ? "جاري التشخيص..."
+                                    : "إبدأ التشخيص الذكي"}
                             </button>
 
-                            {error && <p style={{ color: "red", marginTop: "10px" }}>{error}</p>}
+                            {error && (
+                                <div
+                                    style={{
+                                        backgroundColor: "#FEF2F2",
+                                        border: "1px solid #FECACA",
+                                        borderRadius: "12px",
+                                        padding: "12px 16px",
+                                        color: "#b91c1c",
+                                        fontSize: "15px",
+                                        marginTop: "8px",
+                                    }}
+                                >
+                                    ⚠️ {error}
+                                </div>
+                            )}
                         </div>
                     </section>
                 </>
             )}
 
-            {result && <AiResult result={result} onReset={handleReset} />}
+            {result && (
+                <AiResult
+                    result={result}
+                    onReset={handleReset}
+                />
+            )}
         </>
     );
 };

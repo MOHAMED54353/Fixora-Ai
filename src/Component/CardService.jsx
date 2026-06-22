@@ -14,6 +14,37 @@ const StarRating = ({ rating = 0, reviewCount = 0 }) => (
     </div>
 );
 
+const specialtyArabic = {
+    battery: "البطاريات",
+    brakes: "الفرامل",
+    electrical: "كهرباء السيارات",
+    oil_leak: "تسريب الزيت",
+    starting: "مشاكل التشغيل",
+    transmission: "ناقل الحركة",
+    cooling: "نظام التبريد",
+    suspension: "نظام التعليق",
+    steering: "نظام التوجيه",
+    engine: "المحرك",
+    tires: "الإطارات",
+    maintenance: "الصيانة الدورية",
+};
+const categoryArabic = {
+    oil_change: "تغيير الزيت",
+    battery: "البطاريات",
+    brakes: "الفرامل",
+    electrical: "كهرباء السيارات",
+    oil_leak: "تسريب الزيت",
+    starting: "مشاكل التشغيل",
+    transmission: "ناقل الحركة",
+    cooling: "نظام التبريد",
+    suspension: "نظام التعليق",
+    steering: "نظام التوجيه",
+    engine: "المحرك",
+    tires: "الإطارات",
+    maintenance: "الصيانة الدورية",
+    فحص: "فحص",
+};
+
 const ServiceCard = ({
     title = "",
     description = "",
@@ -56,7 +87,7 @@ const ServiceCard = ({
                             className="badge bg-primary bg-opacity-10 text-primary px-3 py-2"
                             style={{ fontSize: "14px", borderRadius: "16px" }}
                         >
-                            {category || "فئة الخدمة"}
+                            {categoryArabic[category] || "فئة الخدمة"}
                         </span>
                     </div>
                 </div>
@@ -83,7 +114,7 @@ const ServiceCard = ({
                 </div>
 
                 <div>
-                    <p className="mb-4">التخصص : {specialty || "التخصص"}</p>
+                    <p className="mb-4">التخصص : {specialtyArabic[specialty] || "التخصص"}</p>
                 </div>
                 <hr />
 

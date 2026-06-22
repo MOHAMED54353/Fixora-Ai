@@ -35,17 +35,26 @@ import AllTasks from "./Page/AllTasks.jsx";
 import BookingDtoManager from "./Page/BookingDtoManager.jsx";
 
 function App() {
-
-  // 🔥 تشغيل auto refresh أول ما الموقع يفتح
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (token) {
       scheduleTokenRefresh();
     }
+
+    // لما المستخدم يسجل دخول من صفحة تانية
+    const handleAuthChanged = () => {
+      const t = localStorage.getItem("accessToken");
+      if (t) scheduleTokenRefresh();
+    };
+
+    window.addEventListener("authChanged", handleAuthChanged);
+    return () => window.removeEventListener("authChanged", handleAuthChanged);
   }, []);
 
-  // Google Client ID
-  const googleClientId = "704597799772-e3ajullsj3fj5lacb60gj81jiouerlmg.apps.googleusercontent.com";
+  // باقي الكود زي ما هو
+
+  // const googleClientId = "704597799772-e3ajullsj3fj5lacb60gj81jiouerlmg.apps.googleusercontent.com";
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
   return (
     <GoogleOAuthProvider clientId={googleClientId}>
@@ -99,8 +108,7 @@ function App() {
             <Route path="/manager/all-rating" element={<AllRating />} />
             <Route path="/booking-dto-manager/:id" element={<BookingDtoManager />} />
           </Route>
-
-          {/* Errors */}
+          
           <Route path="/error" element={<Error />} />
           <Route path="*" element={<Error />} />
 

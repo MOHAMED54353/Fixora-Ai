@@ -10,9 +10,9 @@ export default defineConfig({
     },
     proxy: {
       "/api": {
-        target: "https://carmaintenance.runasp.net",
+        target: "http://carmaintenancefixora.runasp.net",
         changeOrigin: true,
-        secure: true,
+        secure: false,
       },
     },
   },

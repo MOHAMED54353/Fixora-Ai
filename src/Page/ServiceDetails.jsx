@@ -146,8 +146,9 @@ const ServiceDetails = ({ user }) => {
                                     }}
                                 />
                                 <h4>{tech.displayName || "اسم الفني"}</h4>
-                                <p>{tech.specialization || "تخصص الفني"}</p>
-                                <p>⭐ {tech.rating ?? "—"}</p>
+                                <p style={{ wordBreak: "break-word", overflowWrap: "break-word" }}>
+                                    {tech.specialization || "تخصص الفني"}
+                                </p>                                <p>⭐ {tech.rating ?? "—"}</p>
                                 <p>
                                     {tech.experienceYears} سنوات خبرة
                                 </p>
@@ -156,7 +157,6 @@ const ServiceDetails = ({ user }) => {
                     )}
                 </div>
             </section>
-
             <Scrollbtn />
         </>
     );

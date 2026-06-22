@@ -9,8 +9,6 @@ import { Link } from "react-router";
 const BookingDetails = ({ user }) => {
     const location = useLocation();
     const navigate = useNavigate();
-
-    // ✅ useMemo لمنع إعادة إنشاء الـ array في كل render
     const services = useMemo(() => {
         const { services: servicesFromCart, service: singleService } = location.state || {};
         return servicesFromCart || (singleService ? [singleService] : []);
@@ -21,14 +19,10 @@ const BookingDetails = ({ user }) => {
     const [paymentMethod, setPaymentMethod] = useState("Cash");
     const [loading, setLoading] = useState(false);
     const [iFrameUrl, setIFrameUrl] = useState(null);
-
-    // --- Slots state ---
     const [slotsData, setSlotsData] = useState(null);
     const [slotsLoading, setSlotsLoading] = useState(false);
     const [selectedTechnician, setSelectedTechnician] = useState(null);
     const [selectedSlot, setSelectedSlot] = useState(null);
-
-    // ✅ ref لمنع تكرار الاستدعاء
     const hasFetchedSlots = useRef(false);
 
     const totalPrice = services.reduce(
@@ -53,7 +47,6 @@ const BookingDetails = ({ user }) => {
     const fetchAvailableSlots = async () => {
         if (services.length === 0) return;
 
-        // ✅ منع الاستدعاء المتكرر
         if (hasFetchedSlots.current) return;
         hasFetchedSlots.current = true;
 
@@ -83,14 +76,12 @@ const BookingDetails = ({ user }) => {
             } else {
                 toast.error("فشل تحميل المواعيد المتاحة");
             }
-            // ✅ إعادة تعيين الـ ref عند الفشل للسماح بإعادة المحاولة
             hasFetchedSlots.current = false;
         } finally {
             setSlotsLoading(false);
         }
     };
 
-    // ✅ useEffect بـ empty array فقط — يشتغل مرة واحدة
     useEffect(() => {
         if (services.length === 0) {
             toast.error("لم يتم تمرير خدمات، يرجى العودة للخلف");
@@ -249,7 +240,6 @@ const BookingDetails = ({ user }) => {
                                 </h3>
                             </div>
 
-                            {/* Loading */}
                             {slotsLoading && (
                                 <div className="text-center py-4">
                                     <span className="spinner-border text-primary" />
@@ -307,7 +297,6 @@ const BookingDetails = ({ user }) => {
                                             </div>
                                         </div>
 
-                                        {/* المواعيد — تظهر عند اختيار الفني */}
                                         {isSelected && (
                                             <div>
                                                 <p style={{ fontSize: "14px", color: "#555", marginBottom: "10px" }}>
