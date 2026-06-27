@@ -1,6 +1,18 @@
+.containerrr {
+  min-height: 100vh;
+  position: relative;
+  padding: 16px;
+}
+
+.login-card-container {
+  width: 100%;
+  max-width: 728px;
+  margin: 0 auto;
+}
+
 .login-card {
-  width: 728px;
-  min-height: 640px;
+  width: 100%;
+  min-height: unset;
   background: white;
   border-radius: 16px;
   margin: 0 auto;
@@ -40,12 +52,14 @@
   padding: 8px 16px;
   font-size: 14px;
   transition: all 0.3s;
+  width: 100%;
 }
 
 .form-control:focus {
   background-color: white;
   border-color: #2a5caf;
   outline: none;
+  box-shadow: 0 0 0 3px rgba(42, 92, 175, 0.1);
 }
 
 .form-control.is-invalid {
@@ -99,6 +113,7 @@
   color: #3b5bdb;
   text-decoration: none;
   font-size: 14px;
+  white-space: nowrap;
 }
 
 .forgot-link:hover {
@@ -152,11 +167,23 @@
   text-decoration: underline;
 }
 
+/* ===== Google Button Full Width Fix ===== */
+.google-btn-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
 
+.google-btn-wrapper>div,
+.google-btn-wrapper>div>div,
+.google-btn-wrapper iframe {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* ===== Tablet (max 992px) ===== */
 @media (max-width: 992px) {
-  /* شاشات تابلت */
   .login-card {
-    width: 90%;
     padding: 30px;
   }
 
@@ -194,10 +221,24 @@
   }
 }
 
+/* ===== Mobile (max 576px) ===== */
 @media (max-width: 576px) {
+  .containerrr {
+    padding: 0;
+    align-items: flex-start !important;
+  }
+
+  .login-card-container {
+    width: 100%;
+  }
+
   .login-card {
-    width: 95%;
-    padding: 20px;
+    width: 100%;
+    border-radius: 0;
+    padding: 24px 16px 32px;
+    margin-top: 0;
+    box-shadow: none;
+    min-height: 100vh;
   }
 
   .brand-title {
@@ -205,7 +246,8 @@
   }
 
   .form-title {
-    font-size: 22px;
+    font-size: 20px;
+    margin-bottom: 12px;
   }
 
   .form-label {
@@ -213,31 +255,66 @@
   }
 
   .form-control {
-    height: 40px;
-    font-size: 12px;
-    padding: 6px 10px;
+    height: 44px;
+    font-size: 14px;
+    padding: 6px 12px;
   }
 
-  .btn-login,
+  .btn-login {
+    height: 48px;
+    font-size: 15px;
+    border-radius: 10px;
+  }
+
   .btn-google {
     height: 48px;
     font-size: 14px;
+    border-radius: 10px;
+  }
+
+  .divider {
+    margin: 18px 0;
   }
 
   .divider::before,
   .divider::after {
-    width: 35%;
+    width: 38%;
   }
 
   .signup-text {
-    font-size: 12px;
-  }
-
-  .login-card .mb-3 {
-    margin-bottom: 12px;
+    font-size: 13px;
+    margin-top: 16px;
   }
 
   .forgot-link {
     font-size: 12px;
+  }
+
+  .login-card .mb-3 {
+    margin-bottom: 12px !important;
+  }
+
+  /* تعديل صف "تذكرني" و"نسيت كلمة المرور" */
+  .remember-row {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+/* ===== Very small screens (max 360px) ===== */
+@media (max-width: 360px) {
+  .login-card {
+    padding: 20px 12px 28px;
+  }
+
+  .form-title {
+    font-size: 18px;
+  }
+
+  .btn-login {
+    height: 46px;
+    font-size: 14px;
   }
 }

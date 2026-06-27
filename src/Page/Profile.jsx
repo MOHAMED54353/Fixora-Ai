@@ -25,6 +25,7 @@ const Profile = () => {
 
   const [bookings, setBookings] = useState([]);
   const [loadingBookings, setLoadingBookings] = useState(true);
+  const [aiServices, setAiServices] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -49,26 +50,23 @@ const Profile = () => {
       }
     };
 
-    fetchBookings();
-  }, [navigate, user]);
+    const fetchServices = async () => {
+      try {
+        const ids = [1, 2, 3, 11,5];
+        const responses = await Promise.all(
+          ids.map((id) => axios.get(`/api/Services/${id}`))
+        );
+        const all = responses.map((res) => res.data.data || res.data);
+        const shuffled = all.sort(() => Math.random() - 0.5).slice(0, 2);
+        setAiServices(shuffled);
+      } catch (error) {
+        console.error("خطأ في جلب الخدمات:", error);
+      }
+    };
 
-  const aiRecommendations = [
-    {
-      id: 2,
-      title: "فحص الفرامل",
-      description: "يُنصح بفحص نظام الفرامل قبل السفر",
-      price: 1000,
-      badge: "عاجل",
-      recommend: "الخدمة المقترحة: فحص وصيانة الفرامل",
-    },
-    {
-      id: 1,
-      title: "صيانة دورية مستحقة",
-      description: "يتم فحص نظام الفرامل لضمان السلامة والكفاءة المثلى.",
-      price: 450,
-      recommend: "الخدمة المقترحة: استبدال وسادات الفرامل",
-    },
-  ];
+    fetchBookings();
+    fetchServices();
+  }, [navigate, user]);
 
   if (!user || loadingBookings) {
     return (
@@ -123,11 +121,19 @@ const Profile = () => {
       </div>
 
       <div className="m-5 p-3">
-        <h2>توصيات الذكاء الإصطناعي</h2>
+        <h2 style={{ marginBottom: "50px" }}>توصيات قبل السفر</h2>
         <div className="row g-4">
-          {aiRecommendations.map((item) => (
-            <div className="col-md-6" key={item.id}>
-              <AiRecommend item={item} />
+          {aiServices.map((service) => (
+            <div className="col-md-6" key={service.id}>
+              <AiRecommend
+                item={{
+                  title: service.name,
+                  description: service.description,
+                  price: service.basePrice,
+                  recommend: `الخدمة المقترحة: ${service.name}`,
+                  service: service,
+                }}
+              />
             </div>
           ))}
         </div>

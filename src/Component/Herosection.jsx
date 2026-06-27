@@ -90,7 +90,7 @@ const Herosection = () => {
         /* Mobile - 768px */
         @media (max-width: 768px) {
           .hero-section {
-            margin-top: 50px;
+            margin-top: 100px;
             margin-bottom: 60px;
             padding: 0 15px;
           }
@@ -136,7 +136,7 @@ const Herosection = () => {
         /* Small Mobile - 480px */
         @media (max-width: 480px) {
           .hero-section {
-            margin-top: 0px;
+            margin-top: 100px;
             margin-bottom: 50px;
             padding: 0 10px;
           }
@@ -172,7 +172,7 @@ const Herosection = () => {
         /* Extra Small - 360px */
         @media (max-width: 360px) {
           .hero-section {
-            margin-top: 70px;
+            margin-top: 150px;
           }
 
           .hero-title {

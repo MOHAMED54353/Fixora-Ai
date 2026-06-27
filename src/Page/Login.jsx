@@ -344,12 +344,12 @@ const Login = () => {
               <span>أو</span>
             </div>
 
-            <div className="d-flex justify-content-center w-100">
+            <div className="google-btn-wrapper">
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
-                onError={() => toast.error('❌ فشل تسجيل الدخول بجوجل')}
+                onError={() => toast.error("❌ فشل تسجيل الدخول بجوجل")}
                 theme="outline"
-                width="400"
+                width="100%"
               />
             </div>
 
