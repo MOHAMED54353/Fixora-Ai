@@ -74,7 +74,7 @@ axiosInstance.interceptors.response.use(
     try {
       //  axios العادي مش axiosInstance عشان نتجنب الـ loop
       const res = await axios.post(
-        `${axiosInstance.defaults.baseURL}api/Account/refresh-token`,
+        `${axiosInstance.defaults.baseURL}/Account/refresh-token`,
         { token: accessToken, refreshToken }
       );
 
