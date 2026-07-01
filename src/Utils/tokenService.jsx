@@ -46,7 +46,7 @@ async function doRefresh() {
         }
 
         const res = await axios.post(
-            "https://carmaintenancefixora.runasp.net/api/Account/refresh-token",
+            "/api/Account/refresh-token",
             { token, refreshToken }
         );
 

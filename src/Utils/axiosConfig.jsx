@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://carmaintenancefixora.runasp.net/",
+  baseURL: "/",
   headers: { "Content-Type": "application/json" },
 });
 
@@ -74,7 +74,7 @@ axiosInstance.interceptors.response.use(
     try {
       //  axios العادي مش axiosInstance عشان نتجنب الـ loop
       const res = await axios.post(
-        `${axiosInstance.defaults.baseURL}/Account/refresh-token`,
+        "/api/Account/refresh-token",
         { token: accessToken, refreshToken }
       );
 

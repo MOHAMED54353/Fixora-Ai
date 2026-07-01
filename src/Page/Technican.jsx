@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router"
-import NavUser from "../Component/NavUser";
+import NavUser from "../Component/NavUser.jsx";
 import axios from "../Utils/axiosConfig.jsx";
-import TechnicianBookingCard from "../Component/TechnicianBookingCard";
-import ReviewCard from "../Component/ReviewCard";
+import TechnicianBookingCard from "../Component/TechnicianBookingCard.jsx";
+import ReviewCard from "../Component/ReviewCard.jsx";
 
 const Technican = () => {
     const [tasks, setTasks] = useState([]);

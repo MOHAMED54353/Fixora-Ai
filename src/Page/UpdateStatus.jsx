@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router';
-import NavUser from '../Component/NavUser';
-import AddProblemModal from '../Component/AddProblemModal';
+import NavUser from '../Component/NavUser.jsx';
+import AddProblemModal from '../Component/AddProblemModal.jsx';
 import axios from '../Utils/axiosConfig.jsx';
-import Technican from './Technican';
+import Technican from './Technican.jsx';
 
 const statusOptions = [
     {

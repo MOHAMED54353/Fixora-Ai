@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import React, { useEffect, useState } from "react";
 import NavUser from "../Component/NavUser";
-import "../styles/profile.css";
+import "../styles/Profile.css";
 import Scrollbtn from "../Component/scrollbtn";
 import BookingCard from "../Component/BookingCard";
 import AiRecommend from "../Component/AiRecommend.jsx";
