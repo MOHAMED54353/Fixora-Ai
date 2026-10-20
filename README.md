@@ -157,7 +157,7 @@ AI-generated diagnoses are preliminary and depend on the information provided by
 
 ## Contributors
 
-**Mohamed Elsayed**
+### Muhammed Elsayed
 
 GitHub: [@MOHAMED54353](https://github.com/MOHAMED54353)
 
