@@ -11,10 +11,7 @@ const Status = ({ status }) => {
     if (status === "Pending") activeIndex = 1;
     else if (status === "InProgress") activeIndex = 2;
     else if (status === "Completed") activeIndex = 3;
-
     const stepCount = steps.length;
-
-    // نحسب نسبة الخط الملون من اليمين (RTL)
     const progressPercent = ((activeIndex - 1) / (stepCount - 1)) * 100;
 
     return (

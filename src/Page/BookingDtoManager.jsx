@@ -14,6 +14,7 @@ const BookingDtoManager = () => {
     const [booking, setBooking] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
+    const [changingStatus, setChangingStatus] = useState(false)
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -49,7 +50,9 @@ const BookingDtoManager = () => {
         try {
             setLoading(true);
             toastId = toast.loading("جاري إلغاء الحجز...");
-            await axios.patch(`/api/Bookings/${booking.id}/admin-cancel`);
+            await axios.patch(`/api/Bookings/${booking.id}/admin-cancel`, {
+                reason: "تم الإلغاء بواسطة الأدمن"
+            });
             toast.dismiss(toastId);
             toast.success("تم إلغاء الحجز بنجاح ");
             setBooking(prev => ({
@@ -66,6 +69,34 @@ const BookingDtoManager = () => {
             toast.error("حصل خطأ أثناء إلغاء الحجز");
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleChangePaymentStatus = async (newStatus) => {
+        if (!booking?.id || newStatus === booking.paymentStatus) return;
+        if (newStatus !== 'Paid') return;
+
+        const confirmChange = window.confirm("متأكد إن العميل دفع المبلغ؟");
+        if (!confirmChange) return;
+
+        let toastId;
+        try {
+            setChangingStatus(true);
+            toastId = toast.loading("جاري تأكيد الدفع...");
+            await axios.post(`/api/Payments/${booking.id}/confirm-cash`);
+            toast.dismiss(toastId);
+            toast.success("تم تأكيد استلام الدفع بنجاح");
+            setBooking(prev => ({
+                ...prev,
+                paymentStatus: "Paid"
+            }));
+        } catch (err) {
+            console.error(err);
+            if (toastId) toast.dismiss(toastId);
+            const message = err.response?.data?.errorMessage || "حصل خطأ أثناء تأكيد الدفع";
+            toast.error(message);
+        } finally {
+            setChangingStatus(false);
         }
     };
 
@@ -106,7 +137,11 @@ const BookingDtoManager = () => {
             <ToastContainer position="top-center" autoClose={3000} rtl />
             <NavUser showMenu={false} />
             <Dto1 booking={booking} onCancel={handleCancelBooking} />
-            <Dto2 booking={booking} />
+            <Dto2
+                booking={booking}
+                onChangePaymentStatus={handleChangePaymentStatus}
+                changingStatus={changingStatus}
+            />
         </>
     )
 }

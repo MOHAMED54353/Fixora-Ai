@@ -54,7 +54,10 @@ const BookingsTable = ({ bookings, loading }) => {
 
     const formatDate = (date) => {
         if (!date) return "-";
-        return new Date(date).toLocaleDateString("ar-EG", {
+        const normalized = date.endsWith('Z') || date.includes('+') ? date : date + 'Z';
+        const d = new Date(normalized);
+        if (isNaN(d.getTime())) return "-";
+        return d.toLocaleDateString("ar-EG", {
             year: "numeric", month: "short", day: "numeric",
         });
     };

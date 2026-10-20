@@ -10,7 +10,7 @@ const Aibtn = () => {
       className="chat-bot-button"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onClick={() => navigate("/chatbot")}
+      onClick={() => navigate("/ai-service")}
       style={{
         position: "fixed",
         top: "75%",
@@ -35,7 +35,7 @@ const Aibtn = () => {
       }}
     >
       <i className="fas fa-robot" style={{ fontSize: "18px" }} />
-      مساعد  AI
+      فحص  AI
     </button>
   );
 };

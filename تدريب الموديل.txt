@@ -1,0 +1,404 @@
+[ 1] ✅ [Single] الفرامل بتصفر لما بدوس عليها
+      status=success  got=[3]  expect=[3]
+      services: إصلاح الفرامل(0.98)
+[ 2] ✅ [Single] عايز اغير زيت المحرك والفلتر
+      status=success  got=[1]  expect=[1]
+      services: تغيير زيت المحرك(0.99)
+[ 3] ✅ [Single] المكيف مش بيبرد خالص
+      status=success  got=[9]  expect=[9]
+      services: فحص وإصلاح المكيف(0.98)
+[ 4] ✅ [Single] البطارية فضت والعربية محتاجة جامب ستارت
+      status=success  got=[15]  expect=[15]
+      services: إصلاح البطارية(0.99)
+[ 5] ✅ [Single] الكاوتش بينزل هوا باستمرار
+      status=success  got=[4]  expect=[4]
+      services: تغيير إطارات(0.99)
+[ 6] ✅ [Single] عايز اغسل العربية والمقاعد من جوه
+      status=success  got=[16]  expect=[16]
+      services: تنظيف وتلميع السيارة(0.99)
+[ 7] ✅ [Single] الفتيس بيفصل وانا باسوق
+      status=success  got=[8]  expect=[8]
+      services: إصلاح ناقل الحركة(0.97)
+[ 8] ✅ [Single] الشكمان صوته عالي جدا
+      status=success  got=[12]  expect=[12]
+      services: إصلاح نظام العادم(0.98)
+[ 9] ✅ [Single] الدركسيون تقيل وصعب اللف
+      status=success  got=[7]  expect=[7]
+      services: إصلاح نظام التوجيه(0.99)
+[10] ✅ [Single] العربية بتسخن والراديتير بيغلي
+      status=success  got=[10]  expect=[10]
+      services: إصلاح نظام التبريد(1.00)
+[11] ✅ [Single] العربية مش بتدور في الصبح
+      status=success  got=[13]  expect=[13]
+      services: إصلاح مشاكل التشغيل(0.99)
+[12] ✅ [Single] في نقط زيت تحت العربية
+      status=success  got=[2]  expect=[2]
+      services: إصلاح تسريب الزيت(0.98)
+[13] ✅ [Single] العفشة بتخبط في المطبات
+      status=success  got=[6]  expect=[6]
+      services: إصلاح نظام التعليق(0.99)
+[14] ✅ [Single] العربية بتسحب على اليمين وعايزة ترصيص
+      status=success  got=[5]  expect=[5]
+      services: ضبط الزوايا والتوازن(1.00)
+[15] ✅ [Single] الكهربا بتقطع واللمبات بتنور لوحدها
+      status=success  got=[14]  expect=[14]
+      services: إصلاح الكهرباء(1.00)
+[16] ✅ [Single] لمبة المحرك نورت في التابلوه
+      status=success  got=[11]  expect=[11]
+      services: فحص المحرك الإلكتروني(0.99)
+[17] ✅ [Multi] الموتور بيخبط والعربية بتسخن بسرعة
+      status=success  got=[10, 11]  expect=[10, 11]
+      services: إصلاح نظام التبريد(0.98), فحص المحرك الإلكتروني(0.97)
+[18] ✅ [Multi] الفرامل بتصفر والعفشة بتخبط
+      status=success  got=[3, 6]  expect=[3, 6]
+      services: إصلاح الفرامل(0.99), إصلاح نظام التعليق(0.96)
+[19] ✅ [Multi] البطارية ضعيفة والعربية بتاخد وقت تدور
+      status=success  got=[13, 15]  expect=[13, 15]
+      services: إصلاح البطارية(0.99), إصلاح مشاكل التشغيل(0.97)
+[20] ✅ [Multi] المكيف مش بيبرد وفيه صوت عالي من الشكمان
+      status=success  got=[9, 12]  expect=[9, 12]
+      services: إصلاح نظام العادم(0.98), فحص وإصلاح المكيف(0.93)
+[21] ✅ [Multi] الكاوتش بيتهري والعربية بتسحب ومحتاجة ترصيص
+      status=success  got=[4, 5]  expect=[4, 5]
+      services: ضبط الزوايا والتوازن(0.99), تغيير إطارات(0.98)
+[22] ✅ [Multi] الموتور بيسخن وفيه تسريب زيت ولمبة المحرك ولعت
+      status=success  got=[2, 10, 11]  expect=[2, 10, 11]
+      services: إصلاح نظام التبريد(0.98), فحص المحرك الإلكتروني(0.96), إصلاح تسريب الزيت(0.94)
+[23] ✅ [Multi] الدركسيون تقيل والفرامل بتغطس والعفشة بتخبط
+      status=success  got=[3, 6, 7]  expect=[3, 6, 7]
+      services: إصلاح الفرامل(0.99), إصلاح نظام التعليق(0.89), إصلاح نظام التوجيه(0.88)
+[24] ✅ [Multi] الكهربا بتقطع والبطارية بتفصل والعربية مش بتدور
+      status=success  got=[13, 14, 15]  expect=[13, 14, 15]
+      services: إصلاح البطارية(0.99), إصلاح الكهرباء(0.95), إصلاح مشاكل التشغيل(0.93)
+[25] ✅ [Multi] عايز اغير الزيت واغسل العربية
+      status=success  got=[1, 16]  expect=[1, 16]
+      services: تغيير زيت المحرك(0.97), تنظيف وتلميع السيارة(0.95)
+[26] ✅ [Multi] الفتيس بيزلق وفيه تنقيط زيت تحت العربية
+      status=success  got=[2, 8]  expect=[2, 8]
+      services: إصلاح تسريب الزيت(0.94), إصلاح ناقل الحركة(0.93)
+[27] ✅ [Edge] العربية فاقدة طاقتها على الاوتوستراد
+      status=success  got=[11]  expect=[11]
+      services: فحص المحرك الإلكتروني(0.96)
+[28] ❌ [Edge] لما بوقف بلاقيها مش شايلة
+      status=success  got=[11, 15]  expect=[15]
+      services: إصلاح البطارية(0.88), فحص المحرك الإلكتروني(0.51)
+[29] ✅ [Edge] العربية بتتاخر في الطلوع من الاول
+      status=success  got=[8]  expect=[8]
+      services: إصلاح ناقل الحركة(0.98)
+[30] ✅ [Edge] بسمع زن وانا بدوس على دواسة الوقوف
+      status=success  got=[3]  expect=[3]
+      services: إصلاح الفرامل(0.98)
+[31] ✅ [Edge] الركوب بقى صعب جدا على الظهر
+      status=success  got=[6]  expect=[6]
+      services: إصلاح نظام التعليق(0.99)
+[32] ✅ [Edge] حاسس ان العربية بتشد لجهة لما اسيب الدركسيون
+      status=success  got=[5]  expect=[5]
+      services: ضبط الزوايا والتوازن(0.99)
+[33] ✅ [Gibberish] اسدفغ هجكل منتب
+      status=unknown  got=[]  expect=unknown
+      services: —
+[34] ✅ [Gibberish] كككككككك
+      status=unknown  got=[]  expect=unknown
+      services: —
+[35] ✅ [Gibberish] نتاالاتناتن لاتنا
+      status=unknown  got=[]  expect=unknown
+      services: —
+[36] ✅ [Gibberish] ضصثقف طمنت لكجح
+      status=unknown  got=[]  expect=unknown
+      services: —
+[37] ✅ [Gibberish] 123456789
+      status=unknown  got=[]  expect=unknown
+      services: —
+[38] ✅ [Gibberish] @#$%^&*
+      status=unknown  got=[]  expect=unknown
+      services: —
+[39] ✅ [OOD] نفسي اشرب قهوة دلوقتي
+      status=unknown  got=[]  expect=unknown
+      services: —
+[40] ✅ [OOD] مواعيد الورشة بتفتح امتى
+      status=unknown  got=[]  expect=unknown
+      services: —
+[41] ✅ [OOD] عايز اعرف سعر العربية كام
+      status=unknown  got=[]  expect=unknown
+      services: —
+[42] ✅ [OOD] الجو حر النهاردة اوي
+      status=unknown  got=[]  expect=unknown
+      services: —
+[43] ✅ [Foreign] my car will not start this morning
+      status=unknown  got=[]  expect=unknown
+      services: —
+[44] ✅ [Foreign] el motor 3amel sot ghareeb
+      status=unknown  got=[]  expect=unknown
+      services: —
+[45] ✅ [Foreign] hello how are you today
+      status=unknown  got=[]  expect=unknown
+      services: —
+==============================================================================
+GROUP SUMMARY:
+  Single     16/16  (100%)
+  Multi      10/10  (100%)
+  Edge       5/6  (83%)
+  Gibberish  6/6  (100%)
+  OOD        4/4  (100%)
+  Foreign    3/3  (100%)
+
+OVERALL: 44/45  (97.8%)
+
+================================================================================
+Loading weights: 100%|█████████████████████████████████████████████████████████| 201/201 [00:00<00:00, 2943.72it/s]
+[ 1] ✅ [Single] الزيت بقى لونه اسود ومعاد التغيير عدى
+      status=success  got=[1]  expect=[1]
+      تغيير زيت المحرك(0.99)
+[ 2] ✅ [Single] بقالي 12 الف كيلو مغيرتش زيت الموتور
+      status=success  got=[1]  expect=[1]
+      تغيير زيت المحرك(0.99)
+[ 3] ✅ [Single] بلاقي بقعة زيت سودا تحت العربية كل صبح
+      status=success  got=[2]  expect=[2]
+      إصلاح تسريب الزيت(0.98)
+[ 4] ✅ [Single] الفرامل بتصّفر وبتخبط لما بوقف
+      status=success  got=[3]  expect=[3]
+      إصلاح الفرامل(1.00)
+[ 5] ✅ [Single] حسّيت البيدال بيغطس لحد الاخر
+      status=success  got=[3]  expect=[3]
+      إصلاح الفرامل(0.99)
+[ 6] ✅ [Single] الكاوتش الامامي بيفقد هوا كل يومين
+      status=success  got=[4]  expect=[4]
+      تغيير إطارات(0.99)
+[ 7] ✅ [Single] العربية بترجف من الدركسيون بعد سرعة 100
+      status=success  got=[5]  expect=[5]
+      ضبط الزوايا والتوازن(0.98)
+[ 8] ✅ [Single] سمعت صوت طقطقة من العفشة في المطبات
+      status=success  got=[6]  expect=[6]
+      إصلاح نظام التعليق(0.99)
+[ 9] ✅ [Single] في لعب وخشخشة في الدركسيون
+      status=success  got=[7]  expect=[7]
+      إصلاح نظام التوجيه(0.99)
+[10] ✅ [Single] الجير الاوتوماتيك بيخبط عند التعشيق
+      status=success  got=[8]  expect=[8]
+      إصلاح ناقل الحركة(0.98)
+[11] ✅ [Single] التكييف بيطلع هوا مش بارد
+      status=success  got=[9]  expect=[9]
+      فحص وإصلاح المكيف(0.98)
+[12] ✅ [Single] مؤشر الحرارة بيوصل للاحمر في الزحمة
+      status=success  got=[10]  expect=[10]
+      إصلاح نظام التبريد(0.99)
+[13] ✅ [Single] العربية بتترعش وبتاكل بنزين زيادة
+      status=success  got=[11]  expect=[11]
+      فحص المحرك الإلكتروني(0.99)
+[14] ✅ [Single] دخان ازرق طالع من الشكمان
+      status=success  got=[12]  expect=[12]
+      إصلاح نظام العادم(0.99)
+[15] ✅ [Single] بتاخد 4 محاولات عشان العربية تولع
+      status=success  got=[13]  expect=[13]
+      إصلاح مشاكل التشغيل(0.99)
+[16] ✅ [Single] الفيوز بيضرب والاضاءة بتفصل
+      status=success  got=[14]  expect=[14]
+      إصلاح الكهرباء(1.00)
+[17] ✅ [Single] البطارية بتفضى لو سبت العربية يومين
+      status=success  got=[15]  expect=[15]
+      إصلاح البطارية(0.99)
+[18] ✅ [Single] الفرش والتابلوه متسخين وعايز تلميع
+      status=success  got=[16]  expect=[16]
+      تنظيف وتلميع السيارة(1.00)
+[19] ✅ [Command] عايز احجز تغيير زيت وفلتر
+      status=success  got=[1]  expect=[1]
+      تغيير زيت المحرك(0.98)
+[20] ✅ [Command] محتاج اغير الكاوتش الاربعة
+      status=success  got=[4]  expect=[4]
+      تغيير إطارات(0.99)
+[21] ✅ [Command] عايز اعمل غسيل وتلميع للعربية
+      status=success  got=[16]  expect=[16]
+      تنظيف وتلميع السيارة(0.99)
+[22] ✅ [Command] ممكن تشيك على الفرامل وتصلحها
+      status=success  got=[3]  expect=[3]
+      إصلاح الفرامل(0.98)
+[23] ✅ [Command] عايز اشحن فريون المكيف
+      status=success  got=[9]  expect=[9]
+      فحص وإصلاح المكيف(0.98)
+[24] ✅ [Command-Multi] عايز اغير الزيت واغسل العربية
+      status=success  got=[1, 16]  expect=[1, 16]
+      تغيير زيت المحرك(0.97), تنظيف وتلميع السيارة(0.95)
+[25] ✅ [Command-Multi] محتاج تغيير كاوتش وضبط زوايا
+      status=success  got=[4, 5]  expect=[4, 5]
+      ضبط الزوايا والتوازن(0.99), تغيير إطارات(0.84)
+[26] ✅ [Command-Multi] عايز اغير زيت واتصلح الفرامل واغسل العربية
+      status=success  got=[1, 3, 16]  expect=[1, 3, 16]
+      إصلاح الفرامل(0.97), تغيير زيت المحرك(0.97), تنظيف وتلميع السيارة(0.93)
+[27] ✅ [Multi] الموتور بيخبط والعربية بتسخن
+      status=success  got=[10, 11]  expect=[10, 11]
+      فحص المحرك الإلكتروني(0.97), إصلاح نظام التبريد(0.97)
+[28] ✅ [Multi] البطارية فاضية والعربية مش بتدور
+      status=success  got=[13, 15]  expect=[13, 15]
+      إصلاح البطارية(0.98), إصلاح مشاكل التشغيل(0.96)
+[29] ✅ [Multi] الفرامل بتصفر والدركسيون تقيل
+      status=success  got=[3, 7]  expect=[3, 7]
+      إصلاح نظام التوجيه(0.97), إصلاح الفرامل(0.97)
+[30] ✅ [Multi] الكاوتش بيصفر والعفشة بتخبط
+      status=success  got=[4, 6]  expect=[4, 6]
+      تغيير إطارات(0.99), إصلاح نظام التعليق(0.96)
+[31] ✅ [Multi] المكيف ضعيف والعربية بتسخن
+      status=success  got=[9, 10]  expect=[9, 10]
+      فحص وإصلاح المكيف(0.97), إصلاح نظام التبريد(0.97)
+[32] ✅ [Multi] فيه تسريب زيت والموتور بيدخن
+      status=success  got=[2, 11]  expect=[2, 11]
+      فحص المحرك الإلكتروني(0.98), إصلاح تسريب الزيت(0.96)
+[33] ✅ [Multi] الكهربا بتقطع والبطارية بتفصل
+      status=success  got=[14, 15]  expect=[14, 15]
+      إصلاح البطارية(0.98), إصلاح الكهرباء(0.97)
+[34] ✅ [Triple] الموتور بيسخن وفيه تسريب زيت والشكمان صوته عالي
+      status=success  got=[2, 10, 12]  expect=[2, 10, 12]
+      إصلاح نظام التبريد(0.95), إصلاح نظام العادم(0.93), إصلاح تسريب الزيت(0.92)
+[35] ❌ [Triple] الفرامل بتخبط والعفشة بترج والدركسيون بيسحب
+      status=success  got=[3, 6, 7]  expect=[3, 5, 6]
+      إصلاح نظام التعليق(0.99), إصلاح الفرامل(0.98), إصلاح نظام التوجيه(0.89)
+[36] ✅ [Triple] البطارية ضعيفة والكهربا بتقطع والعربية بتاخد وقت تولع
+      status=success  got=[13, 14, 15]  expect=[13, 14, 15]
+      إصلاح البطارية(0.99), إصلاح الكهرباء(0.96), إصلاح مشاكل التشغيل(0.94)
+[37] ✅ [Triple] الزيت بينقص والموتور بيرجف والعربية بتسخن
+      status=success  got=[2, 10, 11]  expect=[2, 10, 11]
+      إصلاح نظام التبريد(0.99), فحص المحرك الإلكتروني(0.97), إصلاح تسريب الزيت(0.94)
+[38] ✅ [Negation] الفرامل تمام بس المكيف هو اللي مش بيبرد
+      status=success  got=[9]  expect=[9]
+      فحص وإصلاح المكيف(0.98)
+[39] ✅ [Negation] مفيش مشاكل في الموتور بس البطارية بتفضى
+      status=success  got=[15]  expect=[15]
+      إصلاح البطارية(0.98)
+[40] ✅ [Negation] العربية كلها تمام بس عايز اغسلها بس
+      status=success  got=[16]  expect=[16]
+      تنظيف وتلميع السيارة(0.98)
+[41] ✅ [Typo] الفرمل بتصفر وبتخبط
+      status=success  got=[3]  expect=[3]
+      إصلاح الفرامل(0.99)
+[42] ✅ [Typo] المكييف مش بيبرد خالص
+      status=success  got=[9]  expect=[9]
+      فحص وإصلاح المكيف(0.97)
+[43] ✅ [Typo] البطاريه فضت خالص
+      status=success  got=[15]  expect=[15]
+      إصلاح البطارية(0.98)
+[44] ✅ [Typo] الموتور بيسخّن اوي
+      status=success  got=[10]  expect=[10]
+      إصلاح نظام التبريد(0.98)
+[45] ❌ [LongRunOn] الصراحة العربية بقالها فترة بتتعبني اوي الموتور بيخبط وبيسخن بسرعة ولمبة المحرك ولعت وفيه ريحة زيت محروق
+      status=success  got=[10, 11, 12]  expect=[10, 11]
+      فحص المحرك الإلكتروني(0.98), إصلاح نظام التبريد(0.95), إصلاح نظام العادم(0.60)
+[46] ✅ [LongRunOn] انا تعبان من العربية دي بتوقف فجأة والفرامل بتصفر والكاوتش بيفقد هوا وكمان الدركسيون بيسحب عاليمين
+      status=success  got=[3, 4, 5]  expect=[3, 4, 5]
+      إصلاح الفرامل(0.98), تغيير إطارات(0.98), ضبط الزوايا والتوازن(0.98)
+[47] ✅ [Mixed] الموتور بيخبط asdfgh
+      status=success  got=[11]  expect=[11]
+      فحص المحرك الإلكتروني(0.98)
+[48] ✅ [Mixed] الفرامل بتصفر 123 !!!
+      status=success  got=[3]  expect=[3]
+      إصلاح الفرامل(0.99)
+[49] 👁 [Franco] el fram bt2arkash w bt5bot
+      status=unknown  got=[]  expect=observe
+      —
+[50] 👁 [Franco] el motor by5bot w el3arabeya bt5kn
+      status=unknown  got=[]  expect=observe
+      —
+[51] 👁 [Franco] el battery fadyet w el3arabeya msh bt2oom
+      status=unknown  got=[]  expect=observe
+      —
+[52] 👁 [Franco] 3ayez 8ayar el zet
+      status=unknown  got=[]  expect=observe
+      —
+[53] 👁 [Franco] el cauchu nazel hawa
+      status=unknown  got=[]  expect=observe
+      —
+[54] ✅ [English] the brakes are squeaking when i stop
+      status=unknown  got=[]  expect=unknown
+      —
+[55] ✅ [English] my engine is overheating and smoking
+      status=unknown  got=[]  expect=unknown
+      —
+[56] ✅ [English] i want to change the engine oil
+      status=unknown  got=[]  expect=unknown
+      —
+[57] ✅ [English] the air conditioner is not cooling
+      status=unknown  got=[]  expect=unknown
+      —
+[58] ✅ [Symbols] 1234567890
+      status=unknown  got=[]  expect=unknown
+      —
+[59] ✅ [Symbols] !@#$%^&*()
+      status=unknown  got=[]  expect=unknown
+      —
+[60] ✅ [Symbols] ... --- ... ???
+      status=unknown  got=[]  expect=unknown
+      —
+[61] ✅ [Symbols] ٠١٢٣ ٤٥٦٧
+      status=unknown  got=[]  expect=unknown
+      —
+[62] ✅ [Gibberish] اسدفغه جكلمنتب لاتن
+      status=unknown  got=[]  expect=unknown
+      —
+[63] ✅ [Gibberish] ضصثقف هخهخ طمنت
+      status=unknown  got=[]  expect=unknown
+      —
+[64] ✅ [Gibberish] كككك هههه خخخخ
+      status=unknown  got=[]  expect=unknown
+      —
+[65] ✅ [Gibberish] بببب تتتت ثثثث
+      status=unknown  got=[]  expect=unknown
+      —
+[66] ✅ [OOD] فين اقرب محطة بنزين
+      status=unknown  got=[]  expect=unknown
+      —
+[67] ✅ [OOD] عايز اشتري عربية جديدة
+      status=unknown  got=[]  expect=unknown
+      —
+[68] 👁 [OOD] ايه احسن نوع بنزين للعربية
+      status=unknown  got=[]  expect=observe
+      —
+[69] ✅ [OOD] العربية شكلها حلو اوي
+      status=unknown  got=[]  expect=unknown
+      —
+[70] 👁 [VeryShort] صوت
+      status=unknown  got=[]  expect=observe
+      —
+[71] 👁 [VeryShort] عطل
+      status=unknown  got=[]  expect=observe
+      —
+[72] 👁 [VeryShort] العربية تعبانة
+      status=possible got=[6, 11, 16]  expect=observe
+      فحص المحرك الإلكتروني(0.49), تنظيف وتلميع السيارة(0.27), إصلاح نظام التعليق(0.16)
+================================================================================
+GROUP SUMMARY (scored only):
+  Single         18/18  (100%)
+  Command        5/5  (100%)
+  Command-Multi  3/3  (100%)
+  Multi          7/7  (100%)
+  Triple         3/4  (75%)
+  Negation       3/3  (100%)
+  Typo           4/4  (100%)
+  LongRunOn      1/2  (50%)
+  Mixed          2/2  (100%)
+  English        4/4  (100%)
+  Symbols        4/4  (100%)
+  Gibberish      4/4  (100%)
+  OOD            3/3  (100%)
+--------------------------------------------------------------------------------
+PER-SERVICE recall on this test (in_domain cases with known labels):
+  [ 1] زيت          recall=1.00 (TP=5 FN=0 FP=0)
+  [ 2] تسريب زيت    recall=1.00 (TP=4 FN=0 FP=0)
+  [ 3] فرامل        recall=1.00 (TP=9 FN=0 FP=0)
+  [ 4] إطارات       recall=1.00 (TP=5 FN=0 FP=0)
+  [ 5] زوايا        recall=0.75 (TP=3 FN=1 FP=0)  <== ضعيفة
+  [ 6] تعليق        recall=1.00 (TP=3 FN=0 FP=0)
+  [ 7] توجيه        recall=1.00 (TP=2 FN=0 FP=1)
+  [ 8] ناقل حركة    recall=1.00 (TP=1 FN=0 FP=0)
+  [ 9] مكيف         recall=1.00 (TP=5 FN=0 FP=0)
+  [10] تبريد        recall=1.00 (TP=7 FN=0 FP=0)
+  [11] محرك         recall=1.00 (TP=6 FN=0 FP=0)
+  [12] عادم         recall=1.00 (TP=2 FN=0 FP=1)
+  [13] تشغيل        recall=1.00 (TP=3 FN=0 FP=0)
+  [14] كهرباء       recall=1.00 (TP=3 FN=0 FP=0)
+  [15] بطارية       recall=1.00 (TP=6 FN=0 FP=0)
+  [16] تنظيف        recall=1.00 (TP=5 FN=0 FP=0)
+--------------------------------------------------------------------------------
+FAILED CASES:
+  [35] [Triple] الفرامل بتخبط والعفشة بترج والدركسيون بيسحب  -> got=[3, 6, 7] expect=[3, 5, 6]
+  [45] [LongRunOn] الصراحة العربية بقالها فترة بتتعبني اوي الموتور بيخبط وبيسخن بسرعة ولمبة المحرك ولعت وفيه ريحة زيت محروق  -> got=[10, 11, 12] expect=[10, 11]
+================================================================================
+OVERALL (scored): 61/63  (96.8%)
+(👁 observe cases = 9 — مراقبة بس مش محسوبة)

@@ -5,7 +5,6 @@ import axios from "../Utils/axiosConfig";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router";
-
 const BookingDetails = ({ user }) => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -16,9 +15,7 @@ const BookingDetails = ({ user }) => {
 
     const [vehicles, setVehicles] = useState([]);
     const [selectedVehicleId, setSelectedVehicleId] = useState(null);
-    const [paymentMethod, setPaymentMethod] = useState("Cash");
-    const [loading, setLoading] = useState(false);
-    const [iFrameUrl, setIFrameUrl] = useState(null);
+    const [creatingBooking, setCreatingBooking] = useState(false);
     const [slotsData, setSlotsData] = useState(null);
     const [slotsLoading, setSlotsLoading] = useState(false);
     const [selectedTechnician, setSelectedTechnician] = useState(null);
@@ -30,7 +27,6 @@ const BookingDetails = ({ user }) => {
         0
     );
 
-    // --- Fetch vehicles ---
     useEffect(() => {
         const fetchVehicles = async () => {
             try {
@@ -43,30 +39,23 @@ const BookingDetails = ({ user }) => {
         fetchVehicles();
     }, []);
 
-    // --- Fetch available slots ---
     const fetchAvailableSlots = async () => {
         if (services.length === 0) return;
-
         if (hasFetchedSlots.current) return;
         hasFetchedSlots.current = true;
-
         const serviceIds = services
             .map((s) => s.id ?? s.serviceId ?? s.Id)
             .filter((id) => id !== undefined && id !== null);
-
         if (serviceIds.length === 0) {
             toast.error("لم يتم العثور على معرّفات الخدمات");
             return;
         }
-
         setSlotsLoading(true);
         setSelectedTechnician(null);
         setSelectedSlot(null);
-
         try {
             const params = new URLSearchParams();
             serviceIds.forEach((id) => params.append("serviceIds", id));
-
             const res = await axios.get(`/api/Bookings/available-slots?${params.toString()}`);
             setSlotsData(res.data);
         } catch (err) {
@@ -99,75 +88,35 @@ const BookingDetails = ({ user }) => {
 
         const payload = {
             vehicleId: selectedVehicleId,
-            technicianId: selectedTechnician.id,
+            technicianId: selectedTechnician.technicianId,
             scheduledDate: selectedSlot.slotDateTime,
             description: `حجز خدمات: ${services.map((s) => s.Name || s.name).join("، ")}`,
-            paymentMethod: paymentMethod === "Card" ? "CreditCard" : "Cash",
             services: services.map((s) => ({
                 serviceId: s.id,
                 duration: s.EstimatedDurationMinutes || s.estimatedDurationMinutes || 60,
             })),
         };
-
         let toastId;
         try {
-            setLoading(true);
+            setCreatingBooking(true);
             toastId = toast.loading("جاري إنشاء الحجز...");
-            const bookingRes = await axios.post("/api/Bookings", payload);
-            const bookingId = bookingRes.data?.id || bookingRes.data?.bookingId;
-
-            if (paymentMethod === "Card") {
-                toast.dismiss(toastId);
-                toastId = toast.loading("جاري تجهيز الدفع...");
-                const paymentRes = await axios.post("/api/Payments/initiate", {
-                    bookingId,
-                    paymentMethod: "card",
-                });
-                toast.dismiss(toastId);
-                toast.success("تم تجهيز صفحة الدفع");
-                setIFrameUrl(paymentRes.data?.iFrameUrl);
-            } else {
-                toast.dismiss(toastId);
-                toast.success("تم الحجز بنجاح");
-                setTimeout(() => navigate("/profile"), 3000);
-            }
+            await axios.post("/api/Bookings", payload);
+            toast.dismiss(toastId);
+            toast.success("تم الحجز بنجاح، هيتم تحصيل المبلغ بعد إتمام الخدمة");
+            setTimeout(() => navigate("/profile"), 2500);
         } catch (err) {
             console.error(err.response?.data || err);
             if (toastId) toast.dismiss(toastId);
             toast.error(err.response?.data?.errorMessage || "حدث خطأ أثناء الحجز");
         } finally {
-            setLoading(false);
+            setCreatingBooking(false);
         }
     };
+    const isSubmitting = creatingBooking;
 
     return (
         <>
             <NavUser showMenu={false} user={user} />
-            {iFrameUrl && (
-                <div style={{
-                    position: "fixed", inset: 0,
-                    backgroundColor: "rgba(0,0,0,0.6)",
-                    zIndex: 9999, display: "flex",
-                    alignItems: "center", justifyContent: "center",
-                }}>
-                    <div style={{
-                        position: "relative", width: "700px", height: "90vh",
-                        borderRadius: "16px", overflow: "hidden", backgroundColor: "white",
-                    }}>
-                        <button
-                            onClick={() => setIFrameUrl(null)}
-                            style={{
-                                position: "absolute", top: "10px", left: "15px", zIndex: 10,
-                                background: "red", color: "white", border: "none",
-                                borderRadius: "50%", cursor: "pointer", fontSize: "14px",
-                            }}
-                        >✕</button>
-                        <iframe src={iFrameUrl} width="100%" height="100%"
-                            style={{ border: "none" }} title="صفحة الدفع" />
-                    </div>
-                </div>
-            )}
-
             <section className="section3-container m-4 p-5">
                 <div className="section3-header d-block">
                     <h2 style={{ fontSize: "36px", color: "#333D4D", marginBottom: "50px" }}>
@@ -175,9 +124,8 @@ const BookingDetails = ({ user }) => {
                     </h2>
                 </div>
 
-                <div className="d-flex flex-column flex-lg-row gap-4 align-items-start">
+                <div className="d-flex flex-column flex-lg-row flex-wrap gap-4" style={{ alignItems: "flex-start" }}>
                     <div className="d-flex flex-column gap-4" style={{ flex: "1", minWidth: "0" }}>
-
                         <div style={{ backgroundColor: "white", borderRadius: "16px", padding: "24px" }}>
                             <h3 style={{ fontSize: "28px", color: "#333D4D", marginBottom: "30px" }}>
                                 اختر سيارة
@@ -267,7 +215,6 @@ const BookingDetails = ({ user }) => {
                                             transition: "all 0.2s",
                                         }}
                                     >
-                                        {/* معلومات الفني */}
                                         <div className="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
                                             <div className="d-flex gap-3 align-items-center">
                                                 <img
@@ -279,13 +226,16 @@ const BookingDetails = ({ user }) => {
                                                     <h5 style={{ margin: 0, color: "#333D4D", fontSize: "18px" }}>
                                                         {tech.technicianName}
                                                     </h5>
-                                                    <small style={{ color: "#777" }}>
-                                                        {tech.specialization} &nbsp;·&nbsp; {tech.experienceYears} سنوات خبرة
-                                                    </small>
+                                                    <div className="d-flex align-items-center gap-1">
+                                                        <small> {tech.experienceYears} سنوات خبرة</small>
+                                                        <small className="text-muted">
+                                                            {tech.specialization}
+                                                        </small>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div className="d-flex flex-column align-items-end gap-1">
-                                                <span>{tech.rating} ⭐</span>
+                                                <span>{tech.rating} <i className="fas fa-star text-warning"></i> </span>
                                                 {tech.availableSlots?.[0]?.label && (
                                                     <span style={{
                                                         fontSize: "12px", padding: "3px 10px", borderRadius: "20px",
@@ -338,7 +288,8 @@ const BookingDetails = ({ user }) => {
                     </div>
 
                     <div style={{
-                        width: "470px", flexShrink: 0, backgroundColor: "white",
+                        width: "100%",
+                        maxWidth: "470px", flexShrink: 1, backgroundColor: "white",
                         borderRadius: "16px", padding: "24px",
                         position: "sticky", top: "20px",
                     }}>
@@ -372,40 +323,17 @@ const BookingDetails = ({ user }) => {
                             </>
                         )}
 
-                        <div>
-                            <h6 style={{ fontSize: "22px", color: "#333D4D", marginBottom: "10px" }}>
-                                طريقة الدفع
-                            </h6>
-                            <div className="d-flex flex-column gap-3">
-                                {["Cash", "Card"].map((method) => (
-                                    <div key={method}
-                                        className="d-flex justify-content-start gap-3 align-items-center"
-                                        style={{
-                                            backgroundColor: paymentMethod === method ? "#EBF3FE" : "#f9f9f9",
-                                            padding: "24px", borderRadius: "8px", height: "70px",
-                                        }}>
-                                        <input
-                                            className="form-check-input"
-                                            type="radio"
-                                            id={method}
-                                            name="paymentMethod"
-                                            value={method}
-                                            checked={paymentMethod === method}
-                                            onChange={(e) => setPaymentMethod(e.target.value)}
-                                        />
-                                        <label htmlFor={method}>{method === "Cash" ? "نقدي" : "بطاقة"}</label>
-                                    </div>
-                                ))}
-                            </div>
+                        <div className="alert alert-light border text-center" style={{ fontSize: "14px" }}>
+                            سيتم تحديد طريقة الدفع بعد اكتمال الخدمة
                         </div>
                         <hr />
                         <button
                             className="btn btn-primary mt-3"
                             style={{ width: "100%", height: "50px" }}
                             onClick={handleConfirmBooking}
-                            disabled={loading || !selectedSlot}
+                            disabled={isSubmitting || !selectedSlot}
                         >
-                            {loading ? "جاري الحجز..." : `تأكيد الحجز (${services.length} خدمة)`}
+                            {isSubmitting ? "جاري الحجز..." : `تأكيد الحجز (${services.length} خدمة)`}
                         </button>
                         {!selectedSlot && (
                             <p className="text-muted text-center mt-2" style={{ fontSize: "13px" }}>
@@ -415,7 +343,6 @@ const BookingDetails = ({ user }) => {
                     </div>
                 </div>
             </section>
-
             <ToastContainer position="top-center" autoClose={3000} rtl pauseOnHover />
         </>
     );

@@ -20,7 +20,7 @@ const ForgotPassword = () => {
 
         try {
             const res = await axios.post(
-                "https://carmaintenance.runasp.net/api/Account/forgot-password",
+                "api/Account/forgot-password",
                 { email }
             );
 

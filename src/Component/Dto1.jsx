@@ -75,6 +75,7 @@ const styles = `
     border-radius: 30px;
     backdrop-filter: blur(4px);
     position: relative;
+    white-space: nowrap;
   }
   .header-meta {
     display: flex;
@@ -98,7 +99,7 @@ const styles = `
 
   .cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 16px;
     margin-top: 50px;
     margin-bottom: -60px;
@@ -143,6 +144,7 @@ const styles = `
     align-items: center;
     gap: 14px;
     margin-bottom: 14px;
+    flex-wrap: wrap;
   }
   .avatar-initials {
     width: 52px; height: 52px;
@@ -160,6 +162,8 @@ const styles = `
     font-size: 18px;
     font-weight: 700;
     margin: 0 0 3px;
+    word-break: break-word;
+    color: #1A2744;
   }
   .prev-bookings {
     font-size: 13px;
@@ -182,8 +186,9 @@ const styles = `
     background: #F6F9FF;
     padding: 9px 12px;
     border-radius: 10px;
+    word-break: break-all;
   }
-  .contact-item i { color: #2A5CAF; width: 16px; text-align: center; }
+  .contact-item i { color: #2A5CAF; width: 16px; text-align: center; flex-shrink: 0; }
 
   .car-visual {
     display: flex;
@@ -204,6 +209,7 @@ const styles = `
     background: #F6F9FF;
     border-radius: 10px;
     padding: 10px 12px;
+    min-width: 0;
   }
   .spec-label {
     font-size: 11px;
@@ -213,7 +219,7 @@ const styles = `
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
-  .spec-value { font-size: 15px; font-weight: 700; color: #1A2744; }
+  .spec-value { font-size: 15px; font-weight: 700; color: #1A2744; word-break: break-word; }
 
   .tech-avatar {
     width: 64px; height: 64px;
@@ -248,14 +254,27 @@ const styles = `
     padding: 10px 14px;
     border-radius: 10px;
     margin-top: 38px;
+    flex-wrap: wrap;
   }
   .stars { display: flex; gap: 3px; }
   .stars i { color: #F5A623; font-size: 14px; }
   .rating-num { font-size: 15px; font-weight: 800; color: #1A2744; margin-right: 2px; }
+
+  /* ==== Mobile fixes ==== */
+  @media (max-width: 576px) {
+    .booking-page { padding: 16px !important; margin: 0 !important; }
+    .header-card { padding: 20px 18px; border-radius: 16px; }
+    .booking-title { font-size: 20px; }
+    .header-meta { align-items: flex-start; }
+    .cards-grid { grid-template-columns: 1fr; margin-top: 24px; margin-bottom: 0; }
+    .section-card { padding: 18px; }
+    .car-specs { grid-template-columns: 1fr; }
+    .stars-row { margin-top: 20px; }
+  }
 `
 
 const formatDate = (iso) => {
-    if (!iso) return '—'
+    if (!iso) return '—------'
     const d = new Date(iso)
     const opts = { year: 'numeric', month: 'long', day: 'numeric' }
     const date = d.toLocaleDateString('ar-EG', opts)
@@ -306,13 +325,13 @@ const Dto1 = ({ booking, onCancel }) => {
     return (
         <>
             <style>{styles}</style>
-            <div className="booking-page m-3 p-5">
+            <div className="booking-page m-3 p-3 p-md-5">
                 <button className="back-btn" onClick={() => navigate(-1)}>
                     <i className="fas fa-arrow-right"></i>
                     رجوع
                 </button>
                 <div className="header-card">
-                    <div className='d-flex justify-content-between'>
+                    <div className='d-flex justify-content-between flex-wrap gap-2'>
                         <h3 className="booking-title">تفاصيل الحجز</h3>
                         <span
                             className="status-badge"
@@ -322,16 +341,15 @@ const Dto1 = ({ booking, onCancel }) => {
                                 color: statusInfo.color
                             }}
                         >
-                            {statusInfo.label}
+                            {statusInfo.label || "------"}
                         </span>
-
                     </div>
-                    <p className="booking-number"># {booking.bookingNumber}</p>
+                    <p className="booking-number"># {booking.bookingNumber || "------"}</p>
 
                     <div className="header-meta">
                         <div className="date-chip">
                             <i className="fas fa-calendar-alt"></i>
-                            {formatDate(booking.scheduledDate)}
+                            {formatDate(booking.scheduledDate) || "------"}
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
                             <button className="btn btn-danger"
@@ -345,7 +363,6 @@ const Dto1 = ({ booking, onCancel }) => {
                 </div>
 
                 <div className="cards-grid">
-                    {/* Customer */}
                     <div className="section-card">
                         <div className="card-header">
                             <div className="card-icon"><i className="fa-solid fa-user"></i></div>
@@ -362,11 +379,13 @@ const Dto1 = ({ booking, onCancel }) => {
                                 </p>
                             </div>
                         </div>
+
                         <div className="contact-list mt-3">
                             <div className="contact-item">
                                 <i className="fa-solid fa-phone"></i>
-                                {booking.customerPhone}
+                                {booking.customerPhone || 'غير متاح'}   
                             </div>
+                            
                             <div className="contact-item">
                                 <a className="contact-item" href={`mailto:${booking.customerEmail}`} target="_blank" rel="noopener noreferrer">
                                     <i className="fa-solid fa-envelope"></i>
@@ -376,7 +395,6 @@ const Dto1 = ({ booking, onCancel }) => {
                         </div>
                     </div>
 
-                    {/* Car */}
                     <div className="section-card">
                         <div className="card-header">
                             <div className="card-icon"><i className="fa-solid fa-car"></i></div>
@@ -397,7 +415,6 @@ const Dto1 = ({ booking, onCancel }) => {
                         </div>
                     </div>
 
-                    {/* Technician */}
                     <div className="section-card">
                         <div className="card-header">
                             <div className="card-icon" style={{ background: '#FFF3EB' }}>

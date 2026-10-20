@@ -13,15 +13,10 @@ export async function scheduleTokenRefresh() {
 
     if (refreshTimeout) clearTimeout(refreshTimeout);
 
-    // 🔍 دي السطور اللي هتقولك السبب - شيلها بعد ما تحل المشكلة
-    console.log("RAW tokenExpiry:", expiry);
-    console.log("Parsed expiry:", new Date(expiry).toLocaleString());
-    console.log("Delay in minutes:", Math.round(delay / 1000 / 60));
-
     if (delay <= 0) {
         // لو الـ token انتهى فعلاً مش بس قرب ينتهي
         if (expiryTime < now) {
-            console.log("⚠️ Token already expired, trying refresh...");
+            console.log(" Token already expired, trying refresh...");
         }
         await doRefresh();
         return;
@@ -50,7 +45,6 @@ async function doRefresh() {
             { token, refreshToken }
         );
 
-        console.log("✅ Refresh success");
 
         localStorage.setItem("accessToken", res.data.token);
         localStorage.setItem("refreshToken", res.data.refreshToken);

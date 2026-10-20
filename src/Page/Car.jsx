@@ -18,8 +18,6 @@ const Car = () => {
     useEffect(() => {
         const fetchCars = async () => {
             try {
-                const token = localStorage.getItem("accessToken");
-                console.log("access Token:", token ? "OK" : "Missing");
                 const response = await axios.get("/api/Vehicles");
                 setCars(Array.isArray(response.data) ? response.data : []);
                 console.log("number of cars:", Array.isArray(response.data) ? response.data.length : 0, ":the data", response.data);

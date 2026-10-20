@@ -24,9 +24,7 @@ const SPEC_LABEL = {
 const TechnicianCard = ({ technician, onDelete, onEdit, loading }) => {
     if (loading) return <p className="text-center">جارٍ تحميل الفنيين...</p>;
     if (!technician) return <p className="text-center text-muted">لا يوجد فنيون حالياً.</p>;
-
     const isAvailable = technician.IsAvailable ?? technician.isAvailable;
-
     const cardStyle = {
         borderRadius: "16px",
         border: "1px solid #F1F3F5",
@@ -41,7 +39,7 @@ const TechnicianCard = ({ technician, onDelete, onEdit, loading }) => {
 
     const statusBadgeStyle = {
         backgroundColor: isAvailable ? "#F0FDF4" : "#FEF2E8",
-        color: isAvailable ? "#2E7D32" : "#EF6C00",
+        color: isAvailable ? "#2E7D32" : "#e90c0c",
         borderRadius: "8px",
         fontSize: "13px",
         fontWeight: "600",
@@ -80,7 +78,7 @@ const TechnicianCard = ({ technician, onDelete, onEdit, loading }) => {
                             right: "2px",
                             width: "12px",
                             height: "12px",
-                            backgroundColor: isAvailable ? "#4CAF50" : "#f3ff07",
+                            backgroundColor: isAvailable ? "#4CAF50" : "#f2ff00",
                             border: "2px solid white",
                             borderRadius: "50%",
                         }} />

@@ -1,8 +1,10 @@
 import React from "react";
-import { FaCar, FaCalendarAlt, FaIdCard } from "react-icons/fa";
+import { useNavigate } from "react-router";
+import { FaCar, FaCalendarAlt, FaIdCard, FaHistory, FaTrashAlt } from "react-icons/fa";
 import { MdOutlineBuild } from "react-icons/md";
 
 const CarCard = ({ car, onBook, onDelete }) => {
+    const navigate = useNavigate();
     const brand = car.Brand || car.brand || "غير معروف";
     const model = car.Model || car.model || "";
     const year = car.Year || car.year || "";
@@ -58,8 +60,8 @@ const CarCard = ({ car, onBook, onDelete }) => {
                     <h3 style={{ margin: 0, fontSize: "22px", fontWeight: "500", paddingTop: "15px" }}>
                         {brand} {model}
                     </h3>
-                    <div style={{ display: "flex", flexDirection: "column", paddingTop: "8px"}}>
-                        <p style={{ display: "flex", alignItems: "center", fontSize: "14px",gap: "6px" }}>
+                    <div style={{ display: "flex", flexDirection: "column", paddingTop: "8px" }}>
+                        <p style={{ display: "flex", alignItems: "center", fontSize: "14px", gap: "6px" }}>
                             <FaCalendarAlt color="#2A5CAF" />
                             سنة الصنع : {year}
                         </p>
@@ -72,21 +74,23 @@ const CarCard = ({ car, onBook, onDelete }) => {
                 </div>
             </div>
 
-            <div style={{ display: "flex", gap: "12px", marginTop: "8px" }}>
+            {/* Actions */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 <button
                     style={{
-                        flex: 1,
-                        height: "42px",
+                        width: "100%",
+                        height: "44px",
                         borderRadius: "10px",
                         border: "none",
                         background: "#2A5CAF",
                         color: "#fff",
                         fontWeight: "600",
+                        fontSize: "15px",
                         cursor: "pointer",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        gap: "6px",
+                        gap: "8px",
                         transition: "0.2s",
                     }}
                     onMouseEnter={(e) => e.currentTarget.style.background = "#1f4f9a"}
@@ -97,35 +101,72 @@ const CarCard = ({ car, onBook, onDelete }) => {
                     احجز صيانة
                 </button>
 
-                <button
-                    style={{
-                        width: "46px",
-                        height: "42px",
-                        borderRadius: "10px",
-                        border: "1.5px solid #EF4444",
-                        color: "#EF4444",
-                        background: "#fff",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        transition: "0.2s",
-                    }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.background = "#EF4444";
-                        e.currentTarget.style.color = "#fff";
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.background = "#fff";
-                        e.currentTarget.style.color = "#EF4444";
-                    }}
-                    onClick={() => onDelete && onDelete(car.id)}
-                >
-                    <i
-                        className="far fa-trash-alt fs-5"
-                        style={{ cursor: "pointer" }}
-                    ></i>
-                </button>
+                <div style={{ display: "flex", gap: "10px" }}>
+                    <button
+                        style={{
+                            flex: 1,
+                            height: "40px",
+                            borderRadius: "10px",
+                            border: "1px solid #E5E7EB",
+                            background: "#F8FAFC",
+                            color: "#374151",
+                            fontWeight: "500",
+                            fontSize: "13.5px",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: "6px",
+                            transition: "0.2s",
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = "#EEF2FF";
+                            e.currentTarget.style.borderColor = "#2A5CAF";
+                            e.currentTarget.style.color = "#2A5CAF";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = "#F8FAFC";
+                            e.currentTarget.style.borderColor = "#E5E7EB";
+                            e.currentTarget.style.color = "#374151";
+                        }}
+                        onClick={() => navigate(`/car-history/${car.id}`)}
+                    >
+                        <FaHistory size={13} />
+                        تاريخ الصيانة
+                    </button>
+
+                    <button
+                    className="btn btn"
+                        style={{
+                            width: "40px",
+                            height: "40px",
+                            flexShrink: 0,
+                            borderRadius: "10px",
+                            border: "1px solid #E5E7EB",
+                            background: "#F8FAFC",
+                            color: "#9CA3AF",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            transition: "0.2s",
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = "#FEE2E2";
+                            e.currentTarget.style.borderColor = "#EF4444";
+                            e.currentTarget.style.color = "#EF4444";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = "#F8FAFC";
+                            e.currentTarget.style.borderColor = "#E5E7EB";
+                            e.currentTarget.style.color = "#9CA3AF";
+                        }}
+                        onClick={() => onDelete && onDelete(car.id)}
+                        title="حذف السيارة"
+                    >
+                        <FaTrashAlt size={14} />
+                    </button>
+                </div>
             </div>
         </div>
     );

@@ -8,18 +8,49 @@ const typeConfig = {
     TechnicianAssigned: { imgSrc: "/not.png", arText: "تم تعيين فني" },
     NewReview: { imgSrc: "/rev.png", arText: "تقييم جديد" },
     AdditionalIssueAdded: { imgSrc: "/can.png", arText: "تكلفة إضافية" },
+    BookingCreated: { imgSrc: "/not.png", arText: "تم إنشاء الحجز" },
     BookingCompleted: { imgSrc: "/com.png", arText: "اكتمل الحجز" },
     AdditionalIssueApproved: { imgSrc: "/com.png", arText: "تمت الموافقة" },
     AdditionalIssueRejected: { imgSrc: "/can.png", arText: "تم الرفض" },
     BookingCancelled: { imgSrc: "/ff.png", arText: "تم إلغاء الحجز" },
-    PaymentCompleted :{ imgSrc: "/com.png", arText: "اكتمل الدفع" },
-    PaymentFailed :{ imgSrc: "/can.png", arText: "فشل الدفع" },
+    PaymentCompleted: { imgSrc: "/com.png", arText: "اكتمل الدفع" },
+    PaymentFailed: { imgSrc: "/can.png", arText: "فشل الدفع" },
     default: { imgSrc: "/not.png", arText: "إشعار" },
 }
-
 const getConfig = (type) => typeConfig[type] || typeConfig.default
-
 const notifyNavbar = () => window.dispatchEvent(new Event("notificationsRead"))
+
+// بنجيب الدور بنفس الطريقة اللي بتستخدمها ProtectedRoute بالظبط
+const getCurrentUserRole = () => {
+    try {
+        const userData = localStorage.getItem("user")
+        if (!userData) return null
+        const user = JSON.parse(userData)
+        return user?.role ?? null
+    } catch {
+        return null
+    }
+}
+
+const getRedirectPath = (n, role) => {
+    if (role === "Technician") return null
+    if (role === "Admin") {
+        return n.type === "NewReview" ? "/manager/all-rating" : null
+    }
+    if (!n.actionUrl) return null
+    const match = n.actionUrl.match(/\/bookings\/(\d+)/)
+    if (!match) return null
+    const bookingId = match[1]
+    const isPay = n.actionUrl.endsWith("/pay")
+
+    if (isPay) {
+        return `/payment/${bookingId}`
+    }
+    if (n.type === "BookingCompleted") {
+        return `/booking-status-details/${bookingId}`
+    }
+    return `/booking-status/${bookingId}`
+}
 
 const Notification = () => {
     const navigate = useNavigate()
@@ -30,6 +61,7 @@ const Notification = () => {
     const [unreadCount, setUnreadCount] = useState(0)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
+    const [role] = useState(getCurrentUserRole)
 
     const fetchNotifications = async (retry = 1) => {
         try {
@@ -38,8 +70,6 @@ const Notification = () => {
             const res = await axios.get('/api/Notifications', { params: { PageIndex: pageIndex, PageSize: pageSize } })
             setItems(res.data.data || [])
             setTotal(res.data.count || 0)
-            console.log("data", res.data.data);
-
         } catch (err) {
             if (retry > 0) {
                 fetchNotifications(retry - 1)
@@ -89,6 +119,17 @@ const Notification = () => {
         }
     }
 
+    const goToDetails = (e, n) => {
+        e.stopPropagation()
+        if (!n.isRead) {
+            markAsRead(n.id, n.isRead)
+        }
+        const path = getRedirectPath(n, role)
+        if (path) {
+            navigate(path)
+        }
+    }
+
     const totalPages = Math.ceil(total / pageSize)
 
     return (
@@ -135,7 +176,6 @@ const Notification = () => {
                 ) : (
                     <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                         {items.map(n => {
-                            // 2. استخراج arText هنا
                             const { imgSrc, arText } = getConfig(n.type)
                             return (
                                 <div
@@ -192,12 +232,20 @@ const Notification = () => {
                                                     gap: "8px"
                                                 }}>
                                                     <span className="rounded-circle" style={{ width: "6px", height: "6px", background: "#888", flexShrink: 0 }} />
-                                                    {/* 3. استبدال الـ n.type بالـ arText ليعرض بالعربي */}
                                                     {arText}
                                                 </span>
 
                                                 {!n.isRead && (
                                                     <span className="rounded-circle" style={{ width: "8px", height: "8px", background: "#3b82f6", flexShrink: 0 }} />
+                                                )}
+                                                {getRedirectPath(n, role) && (
+                                                    <button
+                                                        onClick={(e) => goToDetails(e, n)}
+                                                        className="btn btn-sm btn-primary"
+                                                        style={{ fontSize: "12px" }}
+                                                    >
+                                                        عرض التفاصيل
+                                                    </button>
                                                 )}
                                             </div>
                                         </div>

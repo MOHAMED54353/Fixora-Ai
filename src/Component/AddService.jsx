@@ -28,11 +28,11 @@ const AddService = ({ onClose, onServiceAdded, serviceToEdit }) => {
     useEffect(() => {
         if (serviceToEdit) {
             reset({
-                name:           serviceToEdit.Name || serviceToEdit.name,
-                category:       serviceToEdit.Category || serviceToEdit.category,
-                description:    serviceToEdit.Description || serviceToEdit.description,
-                price:          serviceToEdit.BasePrice || serviceToEdit.basePrice,
-                duration:       serviceToEdit.EstimatedDurationMinutes || serviceToEdit.estimatedDurationMinutes,
+                name: serviceToEdit.Name || serviceToEdit.name,
+                category: serviceToEdit.Category || serviceToEdit.category,
+                description: serviceToEdit.Description || serviceToEdit.description,
+                price: serviceToEdit.BasePrice || serviceToEdit.basePrice,
+                duration: serviceToEdit.EstimatedDurationMinutes || serviceToEdit.estimatedDurationMinutes,
                 specialization: serviceToEdit.Specialization || serviceToEdit.specialization,
             });
         }
@@ -123,6 +123,7 @@ const AddService = ({ onClose, onServiceAdded, serviceToEdit }) => {
                             <option value="ac">تكييف</option>
                             <option value="cooling">تبريد</option>
                             <option value="engine">محرك</option>
+                            <option value="Maintenance">صيانة دورية</option>
                             <option value="exhaust">عادم</option>
                             <option value="starting">تشغيل</option>
                             <option value="electrical">كهرباء</option>

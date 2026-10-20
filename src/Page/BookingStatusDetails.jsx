@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router'
 import axios from '../Utils/axiosConfig'
 import NavUser from '../Component/NavUser'
 import Status from "../Component/Status"
+import BookingSummaryCards from "../Component/BookingSummaryCards"
+import AdditionalIssuesCard from "../Component/AdditionalIssuesCard"
 import RatingPopup from '../Component/RatingPopup'
 import Invoice from '../Component/Invoice'
 import { toast, ToastContainer } from "react-toastify";
@@ -13,7 +15,6 @@ const BookingStatusDetails = () => {
     const navigate = useNavigate();
 
     const [booking, setBooking] = useState(null);
-    const [openId, setOpenId] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showRatingPopup, setShowRatingPopup] = useState(false);
@@ -27,6 +28,8 @@ const BookingStatusDetails = () => {
             setLoading(true);
             const res = await axios.get(`/api/Bookings/${id}`);
             setBooking(res.data);
+            console.log("data", res.data);
+
         } catch (err) {
             console.error(err);
             setError("حصل خطأ أثناء جلب تفاصيل الحجز");
@@ -42,11 +45,9 @@ const BookingStatusDetails = () => {
     const handleApproveIssue = async (issueId, isApprove) => {
         try {
             const issueToAdd = booking.additionalIssueDtos?.find(i => i.id === issueId);
-
             await axios.patch(`/api/Bookings/additional-issues/${issueId}/approve`, {
                 isApproved: isApprove
             });
-
             await fetchBooking();
 
             if (isApprove && issueToAdd) {
@@ -55,7 +56,6 @@ const BookingStatusDetails = () => {
                         s => s.serviceId === issueId || s.serviceName === issueToAdd.title
                     );
                     if (alreadyAdded) return prev;
-
                     return {
                         ...prev,
                         bookingServiceDetailsDtos: [
@@ -109,6 +109,11 @@ const BookingStatusDetails = () => {
     if (error) return <p className="p-5 text-danger">{error}</p>;
     if (!booking) return <p className="p-5 text-danger">الحجز غير موجود</p>;
 
+    const isPaid =
+        booking.isPaid === true ||
+        booking.paymentStatus === "Paid" ||
+        booking.paymentStatus === "paid";
+    console.log("status:", booking.paymentStatus, "isPaid:", booking.isPaid);
     return (
         <>
             <NavUser showMenu={false} />
@@ -125,224 +130,142 @@ const BookingStatusDetails = () => {
                 <div className='d-block mb-5'>
                     <Status status={booking.status} />
                 </div>
+                <BookingSummaryCards booking={booking} technicianTitle="الفني المعين" />
 
                 <div className='d-flex flex-column flex-md-row justify-content-around align-items-start gap-3 mb-5'>
-                    <div
-                        className='d-flex flex-column shadow-sm'
-                        style={{ width: "100%", maxWidth: "600px", backgroundColor: "white", padding: "1.5rem", minHeight: "150px", borderRadius: "16px" }}
-                    >
-                        <h4 className='mb-3'>بيانات السيارة</h4>
-                        <div className='d-flex align-items-center gap-3'>
-                            <img src="/Frame 429.jpg" alt="" style={{ width: "80px", maxWidth: "100%", height: "auto" }} />
-                            <div>
-                                <p className='mb-1'>{booking.brand} {booking.model}</p>
-                                <p className='mb-1'>رقم اللوحة: {booking.plateNumber}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div
-                        className='d-flex flex-column shadow-sm'
-                        style={{ width: "100%", maxWidth: "600px", backgroundColor: "white", padding: "1.5rem", minHeight: "150px", borderRadius: "16px" }}
-                    >
-                        <h4 className='mb-3'>الفني المعين</h4>
-                        <div className='d-flex align-items-center gap-3'>
-                            <img src="/wrapper.png" alt="" style={{ width: "80px", maxWidth: "100%", height: "auto" }} />
-                            <div>
-                                <h5 className="mb-1">
-                                    {booking.technicianName?.trim() ||
-                                        (booking.status === "Pending"
-                                            ? "لم يتم تعيين فني بعد"
-                                            : "غير محدد")}
-                                </h5>
-                                <p className='mb-1'>التخصص: {booking.technicianSpecialization || "غير محدد"}</p>
-                                <p className='mb-1'>⭐ {booking.review?.technicianRating ?? "---"}</p>
-                            </div>
-                        </div>
-                    </div>
+                    <AdditionalIssuesCard
+                        booking={booking}
+                        issues={booking.additionalIssueDtos || []}
+                        onApprove={handleApproveIssue}
+                        messages={issueMessages}
+                    />
                 </div>
 
-                <div className='d-flex flex-column flex-md-row justify-content-around align-items-start gap-3 mb-5'>
-                    <div
-                        className='d-flex flex-column shadow-sm'
-                        style={{ width: "100%", maxWidth: "600px", backgroundColor: "white", padding: "1.5rem", maxHeight: "490px", borderRadius: "16px" }}
-                    >
-                        <h4 className='mb-3' style={{ fontSize: "1.5rem" }}>تفاصيل الخدمة</h4>
-                        <div className="d-flex flex-column gap-3">
-                            {(booking.bookingServiceDetailsDtos || []).map((item, i) => (
-                                <div
-                                    key={item.serviceId || i}
-                                    className="border rounded-3"
-                                    style={{ background: "#fff", padding: "1rem", cursor: "pointer" }}
-                                >
-                                    <div
-                                        className="d-flex justify-content-between align-items-center"
-                                        onClick={() => setOpenId(openId === i ? null : i)}
-                                    >
-                                        <h6 className="mb-0 fw-bold">{item.serviceName || "خدمة غير محددة"}</h6>
-                                        <span style={{ fontSize: "1.2rem", transform: openId === i ? "rotate(180deg)" : "rotate(0deg)", transition: "0.3s" }}>⌄</span>
-                                    </div>
-                                    {openId === i && (
-                                        <div className="mt-2 p-2 rounded-2" style={{ background: "#F8F9FA" }}>
-                                            <p className="mt-1 text-muted">الوصف: {item.serviceDescription || "الوصف غير متاح حاليا"}</p>
-                                            <div className="d-flex justify-content-between">
-                                                <span style={{ color: "#0d6efd", fontWeight: "bold" }}>{item.servicePrice} جنيه</span>
-                                                <span className="text-muted">{item.duration} دقيقة</span>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                            <hr />
-                            <div className="d-flex justify-content-between fw-bold">
-                                <p>إجمالي التكلفة</p>
-                                <span style={{ color: "#0d6efd" }}>{booking.totalCost} جنيه</span>
-                            </div>
-                        </div>
+                <div className="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                    <div className="d-flex align-items-center gap-2 mb-3">
+                        <span
+                            className="d-flex align-items-center justify-content-center rounded-3 bg-primary bg-opacity-10 text-primary flex-shrink-0"
+                            style={{ width: "38px", height: "38px" }}
+                        >
+                            <i className="fa-solid fa-clipboard-list"></i>
+                        </span>
+                        <h5 className="fw-bold mb-0">تقرير الفني</h5>
                     </div>
 
-                    <div
-                        className='d-flex flex-column shadow-sm'
-                        style={{ width: "100%", maxWidth: "600px", backgroundColor: "#FEF2E8", padding: "24px", minHeight: "250px", borderRadius: "16px" }}
-                    >
-                        <h4 className='mb-3'>تكلفة إضافية مطلوبة</h4>
-
-                        {(booking.additionalIssueDtos || []).length === 0 ? (
-                            <p className="text-muted">لا توجد تكاليف إضافية</p>
-                        ) : (
-                            booking.additionalIssueDtos.map(issue => (
-                                <div
-                                    key={issue.id}
-                                    className="p-3 rounded-3 mb-3"
-                                    style={{ background: "#fff", border: "1px dashed #F4A261" }}
-                                >
-                                    {/* Header: العنوان + Badge */}
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
-                                        <h6 className="fw-bold mb-0 text-dark">
-                                            {issue.title || "مشكلة غير محددة"}
-                                        </h6>
-                                        {issue.isCritical && (
-                                            <span style={{
-                                                display: "inline-flex", alignItems: "center", gap: "5px",
-                                                fontSize: "12px", fontWeight: "500", padding: "4px 10px",
-                                                borderRadius: "999px", background: "#FCEBEB", color: "#A32D2D",
-                                                border: "0.5px solid #F7C1C1"
-                                            }}>
-                                                <i className="bi bi-exclamation-triangle-fill" style={{ fontSize: "11px" }}></i>
-                                                ضروري
-                                            </span>
-                                        )}
-                                    </div>
-
-                                    {/* Alert التحذير */}
-                                    {issue.isCritical && (
-                                        <div style={{
-                                            background: "#FAEEDA", border: "0.5px solid #FAC775",
-                                            borderRadius: "8px", padding: "10px 12px",
-                                            marginBottom: "12px", display: "flex", gap: "8px", alignItems: "flex-start"
-                                        }}>
-                                            <i className="bi bi-exclamation-triangle-fill"
-                                                style={{ color: "#854F0B", fontSize: "13px", marginTop: "2px", flexShrink: 0 }}></i>
-                                            <p className="mb-0" style={{ fontSize: "13px", color: "#633806", lineHeight: "1.6" }}>
-                                                <strong>تنبيه:</strong> الموافقة على التصليح مطلوبة لإتمام العملية.
-                                                في حال عدم الموافقة، سيتم احتساب <strong>تكلفة الخدمة الأساسية</strong> فقط.
-                                            </p>
-                                        </div>
-                                    )}
-
-                                    {issue.description && (
-                                        <p className="text-muted mb-2" style={{ fontSize: "0.9rem" }}>
-                                            {issue.description}
-                                        </p>
-                                    )}
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        <span className="fw-bold">التكلفة:</span>
-                                        <span style={{ color: "#0d6efd", fontWeight: "bold" }}>{issue.estimatedCost} جنيه</span>
-                                    </div>
-                                    <p className="mt-2 text-muted">
-                                        الحالة: {issue.isApproved === true
-                                            ? "تمت الموافقة"
-                                            : issue.status === "Pending"
-                                                ? "بانتظار الموافقة"
-                                                : "تم الرفض"}
-                                    </p>
-                                    {issue.status === "Pending" && (
-                                        <div className="d-flex gap-2 mt-2 flex-wrap">
-                                            <button
-                                                className="btn flex-fill"
-                                                style={{ background: "#EAF3DE", color: "#3B6D11", border: "0.5px solid #C0DD97" }}
-                                                onClick={() => handleApproveIssue(issue.id, true)}
-                                            >
-                                                موافقة ✔
-                                            </button>
-                                            <button
-                                                className="btn flex-fill"
-                                                style={{ background: "#FCEBEB", color: "#A32D2D", border: "0.5px solid #F7C1C1" }}
-                                                onClick={() => handleApproveIssue(issue.id, false)}
-                                            >
-                                                رفض ✖
-                                            </button>
-                                        </div>
-                                    )}
-                                    {issueMessages[issue.id] && (
-                                        <p className="mt-2 fw-bold"
-                                            style={{ color: issue.isApproved === true ? "green" : "red" }}>
-                                            {issueMessages[issue.id]}
-                                        </p>
-                                    )}
-                                </div>
-                            ))
-                        )}
-                    </div>
-                </div>
-
-                <div
-                    className='d-flex flex-column shadow-sm'
-                    style={{ width: "100%", backgroundColor: "white", padding: "24px", borderRadius: "16px", marginBottom: "24px" }}
-                >
-                    <h4 className='mb-2'>تقرير الفني</h4>
                     {booking.technicianReport ? (
-                        <p style={{ color: "#444", lineHeight: "1.8", whiteSpace: "pre-wrap" }}>
+                        <p
+                            className="mb-0 text-secondary bg-light rounded-3 p-3 border"
+                            style={{ lineHeight: "1.9", wordBreak: "break-word" }}
+                        >
                             {booking.technicianReport}
                         </p>
                     ) : (
-                        <p className="text-muted">لم يتم إضافة تقرير من الفني بعد</p>
+                        <div className="d-flex align-items-center gap-2 text-muted bg-light rounded-3 p-3 border border-dashed">
+                            <i className="fa-regular fa-file-lines"></i>
+                            لا يوجد تقرير حتى الآن
+                        </div>
                     )}
                 </div>
 
                 <div
-                    className="d-flex shadow-sm gap-4 align-items-center"
-                    style={{ width: "100%", maxWidth: "1245px", backgroundColor: "white", padding: "24px", borderRadius: "16px", marginTop: "30px" }}
+                    className="shadow-sm d-flex flex-wrap align-items-center justify-content-between"
+                    style={{
+                        width: "100%",
+                        maxWidth: "1250px",
+                        backgroundColor: "white",
+                        padding: "24px",
+                        borderRadius: "16px",
+                        marginTop: "30px",
+                        gap: "12px"
+                    }}
                 >
-                    <button
-                        className="btn fw-bold"
-                        style={{ width: "170px", height: "50px", backgroundColor: "#2A5CAF", color: "white" }}
-                        onClick={() => setShowRatingPopup(true)}
-                    >
-                        <i className="fa-regular fa-star ps-2"></i>
-                        تقييم الحجز
-                    </button>
+                    {booking.status === "Completed" && (
+                        isPaid ? (
+                            <span
+                                className="d-flex align-items-center justify-content-center gap-2 fw-bold"
+                                style={{
+                                    minWidth: "150px",
+                                    padding: "8px 16px",
+                                    height: "45px",
+                                    borderRadius: "12px",
+                                    flexShrink: 0,
+                                    backgroundColor: "#EAF3DE",
+                                    color: "#3B6D11",
+                                    border: "1px solid #C0DD97",
+                                }}
+                            >
+                                <i className="fa-solid fa-circle-check"></i>
+                                تم الدفع
+                            </span>
+                        ) : (
+                            <button
+                                className="btn btn-primary d-flex align-items-center justify-content-center gap-2 fw-bold"
+                                style={{
+                                    minWidth: "150px",
+                                    padding: "8px 16px",
+                                    height: "45px",
+                                    borderRadius: "12px",
+                                    flexShrink: 0
+                                }}
+                                onClick={() => navigate(`/Payment/${booking.id}`)}
+                            >
+                                <i className="fa-solid fa-credit-card"></i>
+                                دفع الفاتورة
+                            </button>
+                        )
+                    )}
 
-                    <button
-                        className="btn fw-bold"
-                        style={{ width: "170px", height: "50px", border: "2px solid #DFDFDF" }}
-                        onClick={async () => {
-                            setShowInvoice(true);
-                            if (invoice) return;
-                            setLoadingInvoice(true);
-                            try {
-                                const res = await axios.get(`/api/Bookings/${id}/invoice`);
-                                setInvoice(res.data);
-                            } catch (err) {
-                                console.error("Error fetching invoice:", err);
-                            } finally {
-                                setLoadingInvoice(false);
-                            }
+                    <div
+                        className="d-flex flex-wrap gap-2"
+                        style={{
+                            flexGrow: 1,
+                            justifyContent: "flex-start"
                         }}
                     >
-                        <i className="fa-solid fa-download ps-2"></i>
-                        تحميل
-                    </button>
+                        <button
+                            className="btn  d-flex align-items-center gap-2 fw-bold"
+                            style={{
+                                minWidth: "150px",
+                                height: "45px",
+                                borderRadius: "10px",
+                                color: "#2A5CAF",
+                                border: "2px solid #2A5CAF",
+                                backgroundColor: "transparent"
+                            }}
+                            onClick={() => setShowRatingPopup(true)}
+                        >
+                            <i className="fa-regular fa-star"></i>
+                            تقييم الحجز
+                        </button>
+
+                        <button
+                            className="btn d-flex align-items-center gap-2 fw-bold"
+                            style={{
+                                minWidth: "150px",
+                                height: "45px",
+                                color: "#2A5CAF",
+                                backgroundColor: "transparent"
+                            }}
+                            onClick={async () => {
+                                setShowInvoice(true);
+                                if (invoice) return;
+                                setLoadingInvoice(true);
+                                try {
+                                    const res = await axios.get(`/api/Bookings/${id}/invoice`);
+                                    setInvoice(res.data);
+                                    console.log("data", res.data);
+
+                                } catch (err) {
+                                    console.error("Error fetching invoice:", err);
+                                } finally {
+                                    setLoadingInvoice(false);
+                                }
+                            }}
+                        >
+                            <i className="fa-solid fa-download"></i>
+                            تحميل الفاتورة
+                        </button>
+                    </div>
                 </div>
             </section>
 
@@ -379,7 +302,6 @@ const BookingStatusDetails = () => {
                     </div>
                 </div>
             )}
-
             {showRatingPopup && (
                 <RatingPopup
                     onClose={() => setShowRatingPopup(false)}

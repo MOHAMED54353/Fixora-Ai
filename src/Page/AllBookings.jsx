@@ -12,42 +12,22 @@ const parseDate = (dateStr) => {
     return isNaN(date.getTime()) ? 0 : date.getTime();
 };
 
-const STATUS_ORDER = {
-    inprogress: 0,
-    pending: 1,
-    waitingclientapproval: 2,
-    completed: 3,
-    cancelled: 4,
-};
-
-const getStatusRank = (booking) => {
-    const status = (booking.status || booking.Status || '').toLowerCase().replace(/\s/g, '');
-    return STATUS_ORDER[status] ?? 99;
-};
-
 const AllBookings = () => {
-    const [bookings, setBookings] = useState([]);
+    const [allBookings, setAllBookings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalCount, setTotalCount] = useState(0);
-    const [stats, setStats] = useState({ totalBookings: 0, inProgress: 0, completed: 0 });
-    const [statsLoading, setStatsLoading] = useState(true);
+    const [activeFilter, setActiveFilter] = useState(null);
 
     useEffect(() => {
         const fetchAllBookings = async () => {
             try {
                 setLoading(true);
                 const res = await axios.get("/api/Bookings/all", {
-                    params: { PageSize: PAGE_SIZE, PageIndex: currentPage },
+                    params: { PageSize: 10000, PageIndex: 1 },
                 });
                 const raw = res.data.data || [];
-                raw.sort((a, b) => {
-                    const statusDiff = getStatusRank(a) - getStatusRank(b);
-                    if (statusDiff !== 0) return statusDiff;
-                    return parseDate(b.scheduledDate) - parseDate(a.scheduledDate);
-                });
-                setBookings(raw);
-                setTotalCount(res.data.count || 0);
+                raw.sort((a, b) => parseDate(b.scheduledDate) - parseDate(a.scheduledDate));
+                setAllBookings(raw);
             } catch (err) {
                 console.error("❌ Error fetching bookings:", err);
             } finally {
@@ -55,28 +35,34 @@ const AllBookings = () => {
             }
         };
         fetchAllBookings();
-    }, [currentPage]);
-
-    useEffect(() => {
-        const fetchStats = async () => {
-            try {
-                setStatsLoading(true);
-                const res = await axios.get("/api/Admin/dashboard-stats");
-                setStats({
-                    totalBookings: res.data.totalBookings || 0,
-                    inProgress: res.data.inProgressBookings || 0,
-                    completed: res.data.completedBookings || 0,
-                });
-            } catch (err) {
-                console.error("❌ Error fetching stats:", err);
-            } finally {
-                setStatsLoading(false);
-            }
-        };
-        fetchStats();
     }, []);
 
+    const getStatus = (b) => b.status || b.Status || "";
+
+    const stats = {
+        totalBookings: allBookings.length,
+        inProgress: allBookings.filter(b => getStatus(b) === "InProgress").length,
+        completed: allBookings.filter(b => getStatus(b) === "Completed").length,
+    };
+
+    const statCards = [
+        { label: "إجمالي الحجوزات", value: stats.totalBookings, icon: "fa-calendar-check", color: "#2A5CAF", filter: null },
+        { label: "قيد التنفيذ", value: stats.inProgress, icon: "fa-spinner", color: "#F97316", filter: "InProgress" },
+        { label: "مكتملة", value: stats.completed, icon: "fa-circle-check", color: "#22C55E", filter: "Completed" },
+    ];
+
+    const filteredBookings = activeFilter
+        ? allBookings.filter(b => getStatus(b) === activeFilter)
+        : allBookings;
+
+    const totalCount = filteredBookings.length;
     const totalPages = Math.ceil(totalCount / PAGE_SIZE);
+    const pageBookings = filteredBookings.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+    const handleFilter = (filter) => {
+        setActiveFilter(activeFilter === filter ? null : filter);
+        setCurrentPage(1);
+    };
 
     const goTo = (page) => {
         if (page < 1 || page > totalPages) return;
@@ -90,12 +76,6 @@ const AllBookings = () => {
         return [currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2];
     };
 
-    const statCards = [
-        { label: "إجمالي الحجوزات", value: stats.totalBookings, icon: "fa-calendar-check", color: "#2A5CAF" },
-        { label: "قيد التنفيذ", value: stats.inProgress, icon: "fa-spinner", color: "#F97316" },
-        { label: "مكتملة", value: stats.completed, icon: "fa-circle-check", color: "#22C55E" },
-    ];
-
     return (
         <>
             <NavUser showMenu={false} />
@@ -108,20 +88,20 @@ const AllBookings = () => {
                 <div className="row py-5 g-3 mb-4">
                     {statCards.map(card => (
                         <div key={card.label} className="col-12 col-md-4">
-                            <div style={{ backgroundColor: "white", padding: "28px 32px", borderRadius: "16px", height: "100%" }}>
+                            <div onClick={() => handleFilter(card.filter)} style={{ backgroundColor: "white", padding: "28px 32px", borderRadius: "16px", height: "100%", cursor: "pointer", border: activeFilter === card.filter ? `2px solid ${card.color}` : "2px solid transparent" }}>
                                 <div className="d-flex justify-content-between align-items-center mb-3">
                                     <p className="mb-0" style={{ fontSize: "20px", color: "#333D4D" }}>{card.label}</p>
                                     <i className={`fa-solid ${card.icon}`} style={{ fontSize: "22px", color: card.color }} />
                                 </div>
                                 <h4 style={{ fontSize: "32px", fontWeight: "700", marginBottom: 0, color: "#1A202C" }}>
-                                    {statsLoading ? "..." : card.value}
+                                    {loading ? "..." : card.value}
                                 </h4>
                             </div>
                         </div>
                     ))}
                 </div>
 
-                <BookingsTable bookings={bookings} loading={loading} />
+                <BookingsTable bookings={pageBookings} loading={loading} />
 
                 {/* Pagination */}
                 {!loading && totalPages > 1 && (

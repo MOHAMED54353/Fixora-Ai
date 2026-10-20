@@ -33,6 +33,8 @@ import Landing from "./Page/Landing.jsx";
 import Notification from "./Page/Notification.jsx";
 import AllTasks from "./Page/AllTasks.jsx";
 import BookingDtoManager from "./Page/BookingDtoManager.jsx";
+import PaymentPage from "./Page/PaymentPage.jsx";
+import CarHistory from "./Page/CarHistory.jsx";
 
 function App() {
   useEffect(() => {
@@ -51,7 +53,6 @@ function App() {
     return () => window.removeEventListener("authChanged", handleAuthChanged);
   }, []);
 
-  // باقي الكود زي ما هو
 
   // const googleClientId = "704597799772-e3ajullsj3fj5lacb60gj81jiouerlmg.apps.googleusercontent.com";
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -62,7 +63,6 @@ function App() {
         <StartTop />
 
         <Routes>
-
           {/* الصفحة الرئيسية */}
           <Route path="/" element={<Default />}>
             <Route index element={<Navigate to="/home" replace />} />
@@ -79,6 +79,7 @@ function App() {
           <Route path="/faq" element={<FaqItems />} />
           <Route path="/chatbot" element={<ChatBot />} />
           <Route path="/landing" element={<Landing />} />
+          <Route path="/payment/:bookingId" element={<PaymentPage />} />
 
           {/* Protected Routes */}
           <Route element={<ProtectedRoute allowedRoles={["User", "Customer", "Technician", "Admin"]} />}>
@@ -92,6 +93,7 @@ function App() {
             <Route path="/ai-service" element={<AiService />} />
             <Route path="/service-details/:id" element={<ServiceDetails />} />
             <Route path="/service" element={<Service />} />
+            <Route path="/car-history/:id" element={<CarHistory />} />
           </Route>
 
           {/* Technician */}

@@ -5,7 +5,7 @@ const styles = `
 
   .dto2-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 20px;
   }
 
@@ -15,6 +15,7 @@ const styles = `
     padding: 24px;
     box-shadow: 0 2px 12px rgba(42, 92, 175, 0.07);
     transition: box-shadow 0.25s, transform 0.2s;
+    min-width: 0;
   }
   .dto2-card:hover {
     box-shadow: 0 6px 24px rgba(42, 92, 175, 0.13);
@@ -42,21 +43,24 @@ const styles = `
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 10px;
     padding: 12px 0;
     border-bottom: 1px dashed #EEF2FF;
+    flex-wrap: wrap;
   }
   .service-item:last-of-type { border-bottom: none; }
-  .service-name { font-size: 15px; font-weight: 600; color: #1A2744; margin: 0 0 4px; }
+  .service-name { font-size: 15px; font-weight: 600; color: #1A2744; margin: 0 0 4px; word-break: break-word; }
   .service-duration {
     display: flex; align-items: center; gap: 5px;
     font-size: 12px; color: #7A8CAB; font-weight: 500;
   }
-  .service-price { font-size: 16px; font-weight: 800; color: #2A5CAF; }
+  .service-price { font-size: 16px; font-weight: 800; color: #2A5CAF; white-space: nowrap; }
 
   .services-total-row {
     display: flex; align-items: center; justify-content: space-between;
     margin-top: 14px; padding: 12px 16px;
     background: #EBF3FE; border-radius: 12px;
+    flex-wrap: wrap; gap: 6px;
   }
   .total-label { font-size: 15px; font-weight: 700; color: #1A3D7C; }
   .total-amount { font-size: 18px; font-weight: 800; color: #1A3D7C; }
@@ -73,18 +77,19 @@ const styles = `
   .issue-top {
     display: flex; align-items: center;
     justify-content: space-between; margin-bottom: 6px;
+    flex-wrap: wrap; gap: 6px;
   }
-  .issue-title { font-size: 14px; font-weight: 700; color: #1A2744; margin: 0; }
+  .issue-title { font-size: 14px; font-weight: 700; color: #1A2744; margin: 0; word-break: break-word; }
   .issue-badge {
     display: inline-flex; align-items: center; gap: 5px;
     font-size: 12px; font-weight: 700; padding: 4px 10px;
-    border-radius: 20px;
+    border-radius: 20px; white-space: nowrap;
   }
   .issue-badge.approved { background: #D0F2E2; color: #0A6B3E; }
   .issue-badge.pending  { background: #FFF0C0; color: #8A6000; }
   .issue-badge.rejected { background: #FFD6D6; color: #A61B1B; }
 
-  .issue-bottom { display: flex; align-items: center; justify-content: space-between; }
+  .issue-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
   .issue-time { font-size: 12px; color: #7A8CAB; display: flex; align-items: center; gap: 4px; }
   .issue-price { font-size: 15px; font-weight: 800; color: #1A2744; }
 
@@ -92,6 +97,7 @@ const styles = `
     display: flex; align-items: center; justify-content: space-between;
     margin-top: 16px; padding-top: 12px; border-top: 2px solid #EFF4FF;
     font-size: 14px; color: #3A4A66; font-weight: 600;
+    flex-wrap: wrap; gap: 6px;
   }
   .issues-total-amount { font-size: 15px; font-weight: 800; color: #1A2744; }
 
@@ -114,128 +120,195 @@ const styles = `
     font-size: 14px;
     color: #3A4A66;
     font-weight: 600;
+    flex-wrap: wrap;
+    gap: 6px;
   }
   .payment-row:last-child { border-bottom: none; }
   .payment-row-label { display: flex; align-items: center; gap: 8px; color: #7A8CAB; }
   .payment-row-label i { color: #2A5CAF; font-size: 14px; }
   .payment-row-value { font-weight: 700; color: #1A2744; font-size: 15px; }
 
-  .pay-status { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 13px; font-weight: 700; }
+  .pay-status { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 13px; font-weight: 700; white-space: nowrap; }
   .pay-status.Paid    { background: #D0F2E2; color: #0A6B3E; }
   .pay-status.Pending { background: #FFF0C0; color: #8A6000; }
   .pay-status.Failed  { background: #FFD6D6; color: #A61B1B; }
+
+  /* Editable payment status dropdown (same look as pay-status badge) */
+  .pay-status-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  .pay-status-wrap.Paid    { background-color: #D0F2E2; }
+  .pay-status-wrap.Pending { background-color: #FFF0C0; }
+  .pay-status-wrap.Failed  { background-color: #FFD6D6; }
+  .pay-status-wrap.disabled { opacity: 0.65; cursor: not-allowed; }
+
+  .pay-status-wrap .status-icon { font-size: 12px; }
+  .pay-status-label { font-size: 13px; font-weight: 700; white-space: nowrap; }
+
+  /* The real <select> sits invisible on top, just to capture clicks/value */
+  .pay-status-select {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    border: none;
+    cursor: pointer;
+  }
+  .pay-status-select:disabled { cursor: not-allowed; }
+
+  .pay-status-wrap .chevron-icon {
+    font-size: 9px;
+    pointer-events: none;
+  }
+  .pay-status-wrap.Paid .status-icon, .pay-status-wrap.Paid .pay-status-label, .pay-status-wrap.Paid .chevron-icon    { color: #0A6B3E; }
+  .pay-status-wrap.Pending .status-icon, .pay-status-wrap.Pending .pay-status-label, .pay-status-wrap.Pending .chevron-icon { color: #8A6000; }
+  .pay-status-wrap.Failed .status-icon, .pay-status-wrap.Failed .pay-status-label, .pay-status-wrap.Failed .chevron-icon  { color: #A61B1B; }
 
   .payment-total {
     display: flex; align-items: center; justify-content: space-between;
     margin-top: 14px; padding: 12px 16px;
     background: linear-gradient(135deg, #2A5CAF, #1A3D7C);
     border-radius: 12px;
+    flex-wrap: wrap; gap: 6px;
   }
   .payment-total-label { font-size: 15px; font-weight: 700; color: #fff; }
   .payment-total-amount { font-size: 20px; font-weight: 800; color: #fff; }
+
+  /* ==== Mobile fixes ==== */
+  @media (max-width: 576px) {
+    .dto2-wrapper { padding: 16px !important; margin: 0 !important; }
+    .dto2-grid { grid-template-columns: 1fr; gap: 14px; }
+    .dto2-card { padding: 18px; }
+    .payment-section { padding: 16px; }
+  }
 `
 
 const formatTime = (iso) => iso ? new Date(iso).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) : '—'
+const Dto2 = ({ booking, onChangePaymentStatus, changingStatus }) => {
+  if (!booking) return null
+  const services = booking.bookingServiceDetailsDtos ?? []
+  const issues = booking.additionalIssueDtos ?? []
+  const servicesTotal = services.reduce((s, x) => s + (x.servicePrice ?? 0), 0)
+  const issuesTotal = issues.filter(i => i.isApproved).reduce((s, x) => s + (x.estimatedCost ?? 0), 0)
+  const grandTotal = booking.totalCost ?? (servicesTotal + issuesTotal)
+  const methodLabels = { Cash: 'كاش', Card: 'بطاقة بنكية', Online: 'محفظة إلكترونية' }
+  const statusLabels = { Paid: 'مدفوع', Pending: 'لسا مدفعش', Failed: 'فشل الدفع' }
+  const statusIcons = { Paid: 'fa-circle-check', Pending: 'fa-clock', Failed: 'fa-circle-xmark' }
 
-const Dto2 = ({ booking }) => {
-    if (!booking) return null
-    const services = booking.bookingServiceDetailsDtos ?? []
-    const issues = booking.additionalIssueDtos ?? []
-
-    const servicesTotal = services.reduce((s, x) => s + (x.servicePrice ?? 0), 0)
-    const issuesTotal = issues.filter(i => i.isApproved).reduce((s, x) => s + (x.estimatedCost ?? 0), 0)
-    const grandTotal = booking.totalCost ?? (servicesTotal + issuesTotal)
-
-    const methodLabels = { Cash: 'كاش', Card: 'بطاقة بنكية', Online: 'محفظة إلكترونية' }
-    const statusLabels = { Paid: 'مدفوع', Pending: 'لسا مدفعش', Failed: 'فشل الدفع' }
-    const statusIcons = { Paid: 'fa-circle-check', Pending: 'fa-clock', Failed: 'fa-circle-xmark' }
-
-    return (
-        <>
-            <style>{styles}</style>
-            <div className="m-3 p-5">
-                <div className="dto2-grid">
-
-                    <div className="dto2-card">
-                        <div className="dto2-card-header">
-                            <div className="dto2-card-icon"><i className="fa-solid fa-clipboard-list"></i></div>
-                            <h4 className="dto2-card-title">الخدمات المطلوبة</h4>
-                        </div>
-                        {services.map((s, i) => (
-                            <div className="service-item" key={i}>
-                                <div>
-                                    <p className="service-name">{s.serviceName || '—'}</p>
-                                    <div className="service-duration"><i className="fa-regular fa-clock"></i>{s.duration || '—'} دقيقة</div>
-                                </div>
-                                <span className="service-price">{s.servicePrice || '—'} جنيه</span>
-                            </div>
-                        ))}
-                        <div className="services-total-row">
-                            <span className="total-label">المجموع</span>
-                            <span className="total-amount">{servicesTotal} جنيه</span>
-                        </div>
-                    </div>
-
-                    <div className="dto2-card">
-                        <div className="dto2-card-header">
-                            <div className="dto2-card-icon" style={{ background: '#FFF8E6' }}>
-                                <i className="fa-solid fa-triangle-exclamation" style={{ color: '#C07000' }}></i>
-                            </div>
-                            <h4 className="dto2-card-title">مشاكل إضافية</h4>
-                        </div>
-                        {issues.length === 0 && <p style={{ color: '#7A8CAB', fontSize: 14, textAlign: 'center', padding: '16px 0' }}>لا توجد مشاكل إضافية</p>}
-                        {issues.map((issue) => {
-                            const st = issue.isApproved === true ? 'approved' : issue.isApproved === false ? 'rejected' : 'pending'
-                            const stLabels = { approved: 'تمت الموافقة', pending: 'قيد الانتظار', rejected: 'مرفوض' }
-                            const stIcons = { approved: 'fa-circle-check', pending: 'fa-clock', rejected: 'fa-circle-xmark' }
-                            return (
-                                <div className={`issue-card ${st}`} key={issue.id}>
-                                    <div className="issue-top">
-                                        <p className="issue-title">{issue.title}</p>
-                                        <span className={`issue-badge ${st}`}><i className={`fa-solid ${stIcons[st]}`}></i>{stLabels[st]}</span>
-                                    </div>
-                                    <div className="issue-bottom">
-                                        <span className="issue-time"><i className="fa-regular fa-clock"></i>{formatTime(issue.createdAt)}</span>
-                                        <span className="issue-price">{issue.estimatedCost} جنيه</span>
-                                    </div>
-                                </div>
-                            )
-                        })}
-                        {issues.length > 0 && (
-                            <div className="issues-total-row">
-                                <span>إجمالي التكاليف الإضافية</span>
-                                <span className="issues-total-amount">{issuesTotal} جنيه</span>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                <div className="payment-section">
-                    <div className="dto2-card-header">
-                        <div className="dto2-card-icon"><i className="fa-solid fa-wallet"></i></div>
-                        <h4 className="dto2-card-title">معلومات الدفع</h4>
-                    </div>
-
-                    <div className="payment-row">
-                        <span className="payment-row-label"><i className="fa-solid fa-money-bill-wave"></i>طريقة الدفع</span>
-                        <span className="payment-row-value">{methodLabels[booking.paymentMethod] ?? booking.paymentMethod}</span>
-                    </div>
-
-                    <div className="payment-row">
-                        <span className="payment-row-label"><i className="fa-solid fa-circle-dot"></i>حالة الدفع</span>
-                        <span className={`pay-status ${booking.paymentStatus}`}>
-                            <i className={`fa-solid ${statusIcons[booking.paymentStatus] ?? 'fa-question'}`}></i>
-                            {statusLabels[booking.paymentStatus] ?? booking.paymentStatus}
-                        </span>
-                    </div>
-
-                    <div className="payment-total">
-                        <span className="payment-total-label">الإجمالي الكلي</span>
-                        <span className="payment-total-amount">{grandTotal} جنيه</span>
-                    </div>
-                </div>
+  return (
+    <>
+      <style>{styles}</style>
+      <div className="dto2-wrapper m-3 p-3 p-md-5">
+        <div className="dto2-grid">
+          <div className="dto2-card">
+            <div className="dto2-card-header">
+              <div className="dto2-card-icon"><i className="fa-solid fa-clipboard-list"></i></div>
+              <h4 className="dto2-card-title">الخدمات المطلوبة</h4>
             </div>
-        </>
-    )
+            {services.map((s, i) => (
+              <div className="service-item" key={i}>
+                <div>
+                  <p className="service-name">{s.serviceName || '—------'}</p>
+                  <div className="service-duration"><i className="fa-regular fa-clock"></i>{s.duration || '—'} دقيقة</div>
+                </div>
+                <span className="service-price">{s.servicePrice || '—-----'} جنيه</span>
+              </div>
+            ))}
+            <div className="services-total-row">
+              <span className="total-label">المجموع</span>
+              <span className="total-amount">{servicesTotal || "------"} جنيه</span>
+            </div>
+          </div>
+
+          <div className="dto2-card">
+            <div className="dto2-card-header">
+              <div className="dto2-card-icon" style={{ background: '#FFF8E6' }}>
+                <i className="fa-solid fa-triangle-exclamation" style={{ color: '#C07000' }}></i>
+              </div>
+              <h4 className="dto2-card-title">مشاكل إضافية</h4>
+            </div>
+            {issues.length === 0 && <p style={{ color: '#7A8CAB', fontSize: 14, textAlign: 'center', padding: '16px 0' }}>لا توجد مشاكل إضافية</p>}
+            {issues.map((issue) => {
+              const st = issue.isApproved === true ? 'approved' : issue.isApproved === false ? 'rejected' : 'pending'
+              const stLabels = { approved: 'تمت الموافقة', pending: 'قيد الانتظار', rejected: 'مرفوض' }
+              const stIcons = { approved: 'fa-circle-check', pending: 'fa-clock', rejected: 'fa-circle-xmark' }
+              return (
+                <div className={`issue-card ${st}`} key={issue.id}>
+                  <div className="issue-top">
+                    <p className="issue-title">{issue.title}</p>
+                    <span className={`issue-badge ${st}`}><i className={`fa-solid ${stIcons[st]}`}></i>{stLabels[st]}</span>
+                  </div>
+                  <div className="issue-bottom">
+                    <span className="issue-time"><i className="fa-regular fa-clock"></i>{formatTime(issue.createdAt)}</span>
+                    <span className="issue-price">{issue.estimatedCost || '—-----'} جنيه</span>
+                  </div>
+                </div>
+              )
+            })}
+            {issues.length > 0 && (
+              <div className="issues-total-row">
+                <span>إجمالي التكاليف الإضافية</span>
+                <span className="issues-total-amount">{issuesTotal || '—-----'} جنيه</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="payment-section">
+          <div className="dto2-card-header">
+            <div className="dto2-card-icon"><i className="fa-solid fa-wallet"></i></div>
+            <h4 className="dto2-card-title">معلومات الدفع</h4>
+          </div>
+
+          <div className="payment-row">
+            <span className="payment-row-label"><i className="fa-solid fa-money-bill-wave"></i>طريقة الدفع</span>
+            <span className="payment-row-value">
+              {methodLabels[booking.paymentMethod] ?? booking.paymentMethod ?? '------'}
+            </span>
+          </div>
+
+          <div className="payment-row">
+            <span className="payment-row-label"><i className="fa-solid fa-circle-dot"></i>حالة الدفع</span>
+            <div className={`pay-status-wrap ${booking.paymentStatus} ${(changingStatus || booking.paymentStatus !== 'Pending') ? 'disabled' : ''}`}>
+              {booking.paymentStatus === 'Pending' && <i className="fa-solid fa-chevron-down chevron-icon"></i>}
+              <i className={`fa-solid status-icon ${statusIcons[booking.paymentStatus] ?? 'fa-question'}`}></i>
+              <span className="pay-status-label">{statusLabels[booking.paymentStatus] ?? booking.paymentStatus}</span>
+              <select
+                className="pay-status-select"
+                value={booking.paymentStatus}
+                disabled={changingStatus || booking.paymentStatus !== 'Pending'}
+                onChange={(e) => onChangePaymentStatus(e.target.value)}
+              >
+                <option value="Pending">لسا مدفعش</option>
+                <option className='' value="Paid">مدفوع</option>
+              </select>
+            </div>
+          </div>
+
+          {/* <div className="payment-row">
+            <span className="payment-row-label"><i className="fa-solid fa-money-bill-wave"></i> حالة الإستلام</span>
+            <span className="payment-row-value" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: booking.paymentStatus === 'Paid' ? '#0A6B3E' : '#A61B1B' }}>
+              <i className={`fa-solid ${booking.paymentStatus === 'Paid' ? 'fa-circle-check' : 'fa-circle-xmark'}`}></i>
+              {booking.paymentMethod === 'Cash'
+                ? (booking.paymentStatus === 'Paid' ? 'تم الإستلام' : 'لم يتم الاستلام')
+                : (booking.paymentStatus === 'Paid' ? 'تم الدفع إلكترونيًا' : 'لم يتم الدفع')}
+            </span>
+          </div> */}
+
+          <div className="payment-total">
+            <span className="payment-total-label">الإجمالي الكلي</span>
+            <span className="payment-total-amount">{grandTotal || '—-----'} جنيه</span>
+          </div>
+        </div>
+      </div>
+    </>
+  )
 }
 export default Dto2

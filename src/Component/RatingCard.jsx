@@ -29,7 +29,6 @@ const RatingCard = ({ review, }) => {
                 boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
             }}
         >
-            {/* Header */}
             <div className="d-flex justify-content-between align-items-center mb-2">
                 <div className="d-flex align-items-center gap-2">
                     <div style={{
@@ -50,15 +49,24 @@ const RatingCard = ({ review, }) => {
                 </div>
             </div>
 
-            {/* Stars */}
-            <div className="d-flex align-items-center gap-2 mb-3">
-                <div>{renderStars(review?.serviceRating || 0)}</div>
-                <span style={{ fontSize: "13px", color: "#A9A9A9" }}>
-                    ({review?.serviceRating || 0}/5)
-                </span>
+            <div className="d-flex align-items-center flex-wrap gap-4 mb-3">
+                <div className="d-flex align-items-center gap-2">
+                    <span style={{ fontSize: "13px", color: "#6B7280", fontWeight: "600" }}>تقييم الخدمة:</span>
+                    <div>{renderStars(review?.serviceRating || 0)}</div>
+                    <span style={{ fontSize: "13px", color: "#A9A9A9" }}>
+                        ({review?.serviceRating || 0}/5)
+                    </span>
+                </div>
+
+                <div className="d-flex align-items-center gap-2">
+                    <span style={{ fontSize: "13px", color: "#6B7280", fontWeight: "600" }}>تقييم الفني:</span>
+                    <div>{renderStars(review?.technicianRating || 0)}</div>
+                    <span style={{ fontSize: "13px", color: "#A9A9A9" }}>
+                        ({review?.technicianRating || 0}/5)
+                    </span>
+                </div>
             </div>
 
-            {/* Comment */}
             <div
                 className="mb-3 p-3"
                 style={{ backgroundColor: "#F6F7FB", borderRadius: "10px", borderRight: "3px solid #2A5CAF" }}
@@ -73,7 +81,6 @@ const RatingCard = ({ review, }) => {
 
             <hr className="mt-0 mb-3" />
 
-            {/* Footer */}
             <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <div className="d-flex gap-4 flex-wrap" style={{ fontSize: "14px", color: "#6B7280" }}>
                     <span>

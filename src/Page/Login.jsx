@@ -110,7 +110,6 @@ const Login = () => {
       console.log("User data saved:", userData);
 
 
-      // إطلاق حدث لتحديث الـ Navbar فوراً
       window.dispatchEvent(new Event("authChanged"));
       toast.success("تم تسجيل الدخول بنجاح!");
 

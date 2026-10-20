@@ -61,7 +61,7 @@ axiosInstance.interceptors.response.use(
     const accessToken = localStorage.getItem("accessToken");
 
     if (!refreshToken || !accessToken) {
-      console.log("🚨 LOGOUT TRIGGERED FROM: interceptor missing token");
+      console.log("LOGOUT TRIGGERED FROM: interceptor missing token");
 
       clearAuthData();
       window.location.href = "/login";
@@ -94,7 +94,7 @@ axiosInstance.interceptors.response.use(
       return axiosInstance(originalRequest);
 
     } catch (refreshError) {
-      console.error("❌ Interceptor refresh failed:", refreshError.response?.status, refreshError.response?.data);
+      console.error(" Interceptor refresh failed:", refreshError.response?.status, refreshError.response?.data);
       processQueue(refreshError, null);
       clearAuthData();
       window.location.href = "/login";
